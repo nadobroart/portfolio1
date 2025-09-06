@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Обо мне — Анастасия</title>
+<meta name="description" content="Обо мне: портрет, путь, выставки и NFT.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{ --bg:#000; --text:#e9eaec; --muted:#9da0a6; --edge:#171717; --max:1300px; --radius:16px; }
+  *{box-sizing:border-box} html{scroll-behavior:smooth}
+  body{margin:0; background:var(--bg); color:var(--text); font-family:Inter, system-ui, -apple-system, Arial, sans-serif}
+  h1,h2{font-weight:800; letter-spacing:-.01em}
+  h2{font-size:clamp(22px,3.2vw,36px); margin:0 0 12px}
+  p{margin:0 0 10px; color:#d8dbe1}
+
+  .minimenu{ position:fixed; left:14px; bottom:14px; z-index:30; display:flex; flex-direction:column; gap:6px;
+    font-size:12px; letter-spacing:.08em; background:rgba(0,0,0,.5); backdrop-filter:blur(6px);
+    padding:8px 10px; border-radius:10px; border:1px solid #111; }
+  .minimenu a{ color:#cfcfd4; text-decoration:none }
+
+  .wrap{ padding:64px 24px 110px; max-width:var(--max); margin:0 auto }
+  .about-hero{ display:grid; grid-template-columns:1fr 1fr; gap:28px; align-items:start }
+  .about-photo{ width:100%; aspect-ratio:3/4; object-fit:cover; background:#0b0b0b; border:1px solid var(--edge); border-radius:12px }
+  .about-intro{ padding-top:min(28vh, 55%); opacity:0; transform:translateY(30px); transition:opacity .7s ease, transform .7s ease }
+  .about-intro.show{ opacity:1; transform:translateY(0) }
+  .about-exhibits{ display:grid; grid-template-columns:1fr 1fr; gap:28px; margin-top:40px }
+  .thumbs{ display:grid; gap:12px }
+  .thumb{ position:relative; border:1px solid var(--edge); border-radius:12px; overflow:hidden; background:#0b0b0b; cursor:pointer; transform:translateZ(0) }
+  .thumb img{ width:100%; height:auto; display:block; object-fit:cover; transition:transform .35s ease }
+  .thumb:hover img{ transform:scale(1.04) }
+  .exhibit-text ul{ margin:10px 0 0 18px; color:#cfcfd4 }
+  @media (max-width:980px){
+    .about-hero{grid-template-columns:1fr}
+    .about-intro{padding-top:18px}
+    .about-exhibits{grid-template-columns:1fr}
+  }
+
+  /* Лайтбокс */
+  .lightbox{ position:fixed; inset:0; display:none; place-items:center; background:rgba(0,0,0,.86); z-index:100 }
+  .lightbox.open{ display:grid }
+  .lb-inner{ position:relative; width:min(92vw,1200px) }
+  .lb-img{ width:100%; background:#111; border:1px solid #1a1a1a; border-radius:14px; object-fit:contain }
+  .lb-cap{ margin-top:8px; color:#cfd1d6; text-align:center; font-size:14px }
+  .lb-prev,.lb-next,.lb-close{ position:absolute; top:50%; transform:translateY(-50%); background:rgba(0,0,0,.4); color:#fff; border:1px solid #2a2a2a; padding:10px 12px; border-radius:10px; cursor:pointer }
+  .lb-prev{left:-6px} .lb-next{right:-6px}
+  .lb-close{ top:-46px; right:0; transform:none }
+  .lb-hint{ position:absolute; bottom:-32px; left:50%; transform:translateX(-50%); color:#8f9096; font-size:12px }
+
+  .foot{ padding:30px 24px; border-top:1px solid var(--edge); color:#8c8d91; text-align:center; font-size:12px }
+</style>
+</head>
+<body>
+
+<main class="wrap">
+  <!-- верхний блок: слева фото, справа твой текст (без изменений) -->
+  <div class="about-hero">
+    <img class="about-photo" src="portrait.jpg" alt="Портрет Анастасии">
+    <div class="about-intro" id="aboutIntro">
+      <h2>Обо мне</h2>
+      <p>Привет, я Анастасия 👋 Я создаю визуальные истории с помощью ИИ и привычных графических инструментов, соединяя эстетику, технологии и атмосферу. Мой путь начался с классического дизайна и digital-арта, выставок в Дубае, Нью-Йорке, Японии и Европе. Сегодня мой фокус - новые форматы в ИИ-креативе: fashion-визуалы, 3D-аватары, клипы и проекты с ярким сторителлингом для брендов.</p>
+      <p>Для меня важно, чтобы каждая работа была не просто картинкой или видео, а чем-то , что вызывает эмоции и запоминается. Я люблю эксперименты, ценю детали и верю, что технологии могут усиливать творчество, а не подменять его. Именно это я и делаю в своих проектах.</p>
+    </div>
+  </div>
+
+  <!-- выставки и NFT: слева 3 миниатюры, справа описание -->
+  <section class="about-exhibits">
+    <div class="thumbs" id="thumbs">
+      <div class="thumb" data-idx="0"><img src="nft1.jpg" alt="Работа 1"></div>
+      <div class="thumb" data-idx="1"><img src="nft2.jpg" alt="Работа 2"></div>
+      <div class="thumb" data-idx="2"><img src="nft3.jpg" alt="Работа 3"></div>
+    </div>
+    <div class="exhibit-text">
+      <h2>Путь и выставки</h2>
+      <p>Несколько лет строю визуальные миры с упором на атмосферу и ощутимую фактуру кадра. Выставлялась в Дубае, Нью-Йорке, Бали, Японии, Португалии. Работаю с брендами и артистами, собираю кампании без тяжёлой офлайн-съёмки.</p>
+      <ul>
+        <li>AI-контент: fashion, продуктовые сцены, нейро-портреты</li>
+        <li>Продающие рилсы и клипы: идея → визуал → монтаж → звук</li>
+        <li>NFT-опыт, международные показы</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<!-- мини-меню слева снизу -->
+<nav class="minimenu" aria-label="Мини-меню">
+  <a href="about.html">обо мне</a>
+  <a href="contact.html">контакты</a>
+  <a href="index.html">главная</a>
+</nav>
+
+<!-- лайтбокс -->
+<div class="lightbox" id="lightbox">
+  <div class="lb-inner">
+    <button class="lb-close" id="lbClose" aria-label="Закрыть">×</button>
+    <button class="lb-prev" id="lbPrev" aria-label="Назад">‹</button>
+    <img class="lb-img" id="lbImg" src="" alt="">
+    <button class="lb-next" id="lbNext" aria-label="Вперёд">›</button>
+    <div class="lb-cap" id="lbCap"></div>
+    <div class="lb-hint">Двойной клик — закрыть</div>
+  </div>
+</div>
+
+<footer class="foot">
+  <small>© <span id="year"></span> Анастасия</small>
+</footer>
+
+<script>
+  // «выезд» текста при открытии страницы
+  window.addEventListener('DOMContentLoaded', ()=> {
+    setTimeout(()=> document.getElementById('aboutIntro')?.classList.add('show'), 150);
+    document.getElementById('year').textContent = new Date().getFullYear();
+  });
+
+  // Лайтбокс
+  const thumbs = document.getElementById('thumbs');
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  const lbCap = document.getElementById('lbCap');
+  const lbPrev = document.getElementById('lbPrev');
+  const lbNext = document.getElementById('lbNext');
+  const lbClose = document.getElementById('lbClose');
+
+  const gallery = [
+    {src:'nft1.jpg', cap:'Работа 1 — описание/серия/год'},
+    {src:'nft2.jpg', cap:'Работа 2 — описание/серия/год'},
+    {src:'nft3.jpg', cap:'Работа 3 — описание/серия/год'}
+  ];
+  let gi = 0;
+
+  function openLB(i=0){ gi=i; renderLB(); lb.classList.add('open'); }
+  function closeLB(){ lb.classList.remove('open'); }
+  function prevLB(){ gi=(gi-1+gallery.length)%gallery.length; renderLB(); }
+  function nextLB(){ gi=(gi+1)%gallery.length; renderLB(); }
+  function renderLB(){ lbImg.src = gallery[gi].src; lbCap.textContent = gallery[gi].cap; }
+
+  thumbs?.addEventListener('click', e=>{
+    const t = e.target.closest('.thumb'); if(!t) return;
+    openLB(Number(t.dataset.idx||0));
+  });
+  lbPrev.addEventListener('click', prevLB);
+  lbNext.addEventListener('click', nextLB);
+  lbClose.addEventListener('click', closeLB);
+  lb.addEventListener('dblclick', closeLB);
+  document.addEventListener('keydown', e=>{
+    if(!lb.classList.contains('open')) return;
+    if(e.key==='Escape') closeLB();
+    if(e.key==='ArrowLeft') prevLB();
+    if(e.key==='ArrowRight') nextLB();
+  });
+</script>
+</body>
+</html>
