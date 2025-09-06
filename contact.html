@@ -21,7 +21,10 @@
   .wrap{ padding:64px 24px 110px; max-width:900px; margin:0 auto }
   .contacts{display:grid; gap:12px; margin-top:12px}
   .contacts a{display:block; padding:14px; border:1px solid #1a1a1a; border-radius:8px; text-align:center; background:#0b0b0b; color:#e9eaec}
-  .contact-slogan{margin-top:24px; text-align:center; color:#cfd1d6}
+
+  /* слоган — ближе к середине страницы */
+  .slogan-box{ height:45vh; display:grid; place-items:center; }
+  .contact-slogan{ text-align:center; color:#cfd1d6; max-width:28ch; font-weight:600; letter-spacing:.01em }
 
   .foot{ padding:30px 24px; border-top:1px solid var(--edge); color:#8c8d91; text-align:center; font-size:12px }
 </style>
@@ -36,10 +39,12 @@
     <a href="https://t.me/nadobroart_neuro" target="_blank" rel="noopener">Telegram группа @nadobroart_neuro</a>
     <a href="mailto:nadobroart@gmail.com">nadobroart@gmail.com</a>
   </div>
-  <p class="contact-slogan">свяжитесь со мной, создадим историю вашего бренда вместе</p>
+
+  <div class="slogan-box">
+    <p class="contact-slogan">свяжитесь со мной, создадим историю вашего бренда вместе</p>
+  </div>
 </main>
 
-<!-- мини-меню слева снизу -->
 <nav class="minimenu" aria-label="Мини-меню">
   <a href="about.html">обо мне</a>
   <a href="contact.html">контакты</a>
