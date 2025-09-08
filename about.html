@@ -5,33 +5,93 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Обо мне — Анастасия</title>
 <meta name="description" content="Обо мне: портрет, путь, выставки и NFT-альбом.">
+<!-- Заголовки/меню остаются Inter; текст — Manrope -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{ --bg:#000; --text:#e9eaec; --muted:#9da0a6; --edge:#171717; --max:1300px; --radius:14px; }
-  *{box-sizing:border-box} html{scroll-behavior:smooth}
+  :root{
+    --bg:#000; --text:#e9eaec; --muted:#9da0a6; --edge:#171717;
+    --max:1300px; --radius:14px;
+    --gap:72px;          /* базовый зазор между колонками */
+    --gapPlus:108px;     /* +50% правее для текста */
+    --titleSpace:22px;   /* текущий отступ под заголовком */
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
   body{margin:0; background:var(--bg); color:var(--text); font-family:Inter, system-ui, -apple-system, Arial, sans-serif}
 
-  /* Заголовки — как есть (Inter), ТЕКСТЫ — Manrope */
-  h2{font-weight:800; letter-spacing:-.01em; font-size:clamp(22px,3.2vw,36px); margin:0 0 14px}
+  /* типографика */
+  h2{font-weight:800; letter-spacing:-.01em; font-size:clamp(22px,3.2vw,36px); margin:0 0 var(--titleSpace)}
   .bodytext{ font-family: Manrope, Inter, system-ui, -apple-system, Arial, sans-serif; }
-  .bodytext p, .bodytext li{ color:#d8dbe1; line-height:1.55 }
+  .bodytext p, .bodytext li{ color:#d8dbe1; line-height:1.6; }
+  .bodytext p + p{ margin-top:14px; } /* абзацы разнесены */
 
-  .minimenu{ position:fixed; left:14px; bottom:14px; z-index:30; display:flex; flex-direction:column; gap:6px;
+  /* мини-меню (всегда) — слева снизу */
+  .minimenu{
+    position:fixed; left:14px; bottom:14px; z-index:30; display:flex; flex-direction:column; gap:6px;
     font-size:12px; letter-spacing:.08em; background:rgba(0,0,0,.5); backdrop-filter:blur(6px);
-    padding:8px 10px; border-radius:10px; border:1px solid #111; }
+    padding:8px 10px; border-radius:10px; border:1px solid #111;
+  }
   .minimenu a{ color:#cfcfd4; text-decoration:none }
 
-  .wrap{ padding:64px 48px 110px 72px; max-width:var(--max); margin:0 auto; }
+  /* переключатель RU/ENG — справа снизу, стиль как у мини-меню */
+  .langswitch{
+    position:fixed; right:14px; bottom:14px; z-index:30; display:flex; gap:10px;
+    font-size:12px; letter-spacing:.08em; background:rgba(0,0,0,.5); backdrop-filter:blur(6px);
+    padding:8px 10px; border-radius:10px; border:1px solid #111;
+  }
+  .langswitch button{
+    appearance:none; background:transparent; border:none; color:#cfcfd4; cursor:pointer; padding:0 2px; font:inherit;
+    opacity:.8;
+  }
+  .langswitch button.active{ opacity:1; color:#ffffff; text-decoration:underline; text-underline-offset:3px }
 
-  /* Ряд 1 */
-  .row{ display:grid; grid-template-columns:5fr 7fr; column-gap:72px; align-items:start }
-  .photo{ width:100%; aspect-ratio:3/4; object-fit:cover; background:#0b0b0b; border:1px solid var(--edge); border-radius:12px }
-  .right-col p, .right-col ul{max-width:60ch}
+  /* контейнер — чуть правее + воздух */
+  .wrap{
+    /* левый паддинг больше, чтобы контент казался сдвинутым вправо */
+    padding:64px 48px 110px 72px;
+    max-width:var(--max); margin:0 auto;
+  }
 
-  /* Ряд 2 */
-  .row-bottom{ margin-top:64px; display:grid; grid-template-columns:5fr 7fr; column-gap:72px; align-items:start }
-  .stack{ position:relative; height:min(48vw, 440px); max-width:560px; }
-  .card{ position:absolute; top:0; left:0; width:78%; aspect-ratio:4/3; border:1px solid var(--edge); border-radius:12px; overflow:hidden; background:#0b0b0b; box-shadow:0 20px 60px rgba(0,0,0,.35); cursor:pointer }
+  /* Ряд 1: слева фото, справа текст
+     — текст дополнительно отодвигаем вправо на + половину текущего зазора */
+  .row{
+    display:grid;
+    grid-template-columns: 5fr 7fr;
+    column-gap:var(--gap);
+    align-items:start;
+  }
+  .row .right-col{ padding-left:calc(var(--gapPlus) - var(--gap)); } /* +50% отступа вправо относительно базового зазора */
+  .photo{
+    width:100%; aspect-ratio:3/4; object-fit:cover;
+    background:#0b0b0b; border:1px solid var(--edge); border-radius:12px;
+  }
+
+  /* Увеличиваем вертикальный отступ под заголовками на величину текущего */
+  .right-col h2 + *{ margin-top:calc(var(--titleSpace) + var(--titleSpace)); }
+
+  .right-col p, .right-col ul{ max-width:62ch }
+
+  /* Ряд 2: слева превью-стопка (ровно выровнена и того же размера по ширине, что и фото),
+           справа короткий текст; такие же зазоры */
+  .row-bottom{
+    margin-top:64px;
+    display:grid;
+    grid-template-columns: 5fr 7fr;
+    column-gap:var(--gap);
+    align-items:start;
+  }
+  .row-bottom .right-col{ padding-left:calc(var(--gapPlus) - var(--gap)); }
+  /* контейнер превью: занимаем всю ширину левой колонки и держим соотношение 3:4,
+     чтобы визуально совпадать с фото выше */
+  .stack{
+    position:relative; width:100%; aspect-ratio:3/4; /* тот же ratio, что и фото */
+    max-width:none;   /* равна ширине колонки */
+  }
+  .card{
+    position:absolute; top:0; left:0; width:78%; aspect-ratio:4/3;
+    border:1px solid var(--edge); border-radius:12px; overflow:hidden; background:#0b0b0b;
+    box-shadow:0 20px 60px rgba(0,0,0,.35); cursor:pointer;
+  }
   .card img{width:100%; height:100%; object-fit:cover; display:block; transition:transform .35s ease}
   .card:nth-child(1){ transform:rotate(-6deg) translate(-8px, 8px); z-index:1}
   .card:nth-child(2){ transform:rotate(2deg)  translate(14px, 14px); z-index:2}
@@ -42,9 +102,11 @@
   @media (max-width:980px){
     .wrap{ padding:32px 18px 90px 18px }
     .row{ grid-template-columns:1fr; column-gap:0 }
+    .row .right-col{ padding-left:0 }
     .row-bottom{ grid-template-columns:1fr; column-gap:0; gap:22px }
-    .stack{ position:static; height:auto; display:grid; grid-template-columns:1fr; gap:10px; max-width:none }
-    .card{ position:relative; width:100%; transform:none }
+    .row-bottom .right-col{ padding-left:0 }
+    .stack{ position:static; width:100%; aspect-ratio:auto; }
+    .card{ position:relative; width:100%; transform:none; aspect-ratio:4/3; }
     .stack-note{ position:static; margin-top:6px }
   }
 
@@ -53,8 +115,8 @@
   .lightbox.open{ display:grid }
   .lb-inner{ position:relative; width:min(92vw,1200px) }
   .lb-img{ width:100%; background:#111; border:1px solid #1a1a1a; border-radius:14px; object-fit:contain; cursor:pointer }
-  .lb-title{ margin-top:10px; text-align:center; font-weight:800; letter-spacing:.005em } /* Inter — заголовок */
-  .lb-meta{ text-align:center; color:#cfd1d6; font-size:14px } /* Manrope для подписи? — оставим Inter для единообразия */
+  .lb-title{ margin-top:10px; text-align:center; font-weight:800; letter-spacing:.005em } /* заголовок (Inter) */
+  .lb-meta{ text-align:center; color:#cfd1d6; font-size:14px }
   .lb-desc{ display:none; margin-top:8px; text-align:center; font-family: Manrope, Inter, system-ui, -apple-system, Arial, sans-serif; color:#d8dbe1; line-height:1.55 }
   .lb-desc.show{ display:block }
 
@@ -66,23 +128,30 @@
   .lb-prev{left:-6px} .lb-next{right:-6px}
   .lb-close{ top:-46px; right:0; transform:none }
   .lb-hint{ position:absolute; bottom:-32px; left:50%; transform:translateX(-50%); color:#8f9096; font-size:12px }
+
   .foot{ padding:30px 24px; border-top:1px solid var(--edge); color:#8c8d91; text-align:center; font-size:12px }
 </style>
 </head>
 <body>
 
 <main class="wrap">
-  <!-- Ряд 1 -->
+  <!-- Ряд 1: слева фото, справа текст -->
   <section class="row">
     <img class="photo" src="portrait.jpg" alt="Портрет Анастасии">
     <div class="right-col bodytext">
       <h2>Обо мне</h2>
-      <p>Привет, я Анастасия 👋 Я создаю визуальные истории с помощью ИИ и привычных графических инструментов, соединяя эстетику, технологии и атмосферу. Мой путь начался с классического дизайна и digital-арта, выставок в Дубае, Нью-Йорке, Японии и Европе. Сегодня мой фокус - новые форматы в ИИ-креативе: fashion-визуалы, 3D-аватары, клипы и проекты с ярким сторителлингом для брендов.</p>
+
+      <p>Здравствуйте, я Анастасия, мне 26 лет. Имею высшее образование, Бакалавр на факультете Архитектуры и Дизайна. За спиной у меня объемный художественный бэкграунд и сейчас Я создаю визуальные истории с помощью ИИ и привычных графических инструментов, соединяя эстетику, технологии и атмосферу.</p>
+
+      <p>Мой путь начался с классического дизайна и digital-арта, благодаря NFT я нашла свой стиль, нашла и приняла себя, и этот мир ответил мне взаимностью. Не раз я выставлялась в разных странах и городах: в Москве, Дубае, Нью-Йорке, Японии, Испании, Индонезии.</p>
+
+      <p>Сегодня мой фокус - новые форматы в ИИ-креативе: fashion-визуалы, 3D-аватары, клипы и проекты с ярким сторителлингом для брендов.</p>
+
       <p>Для меня важно, чтобы каждая работа была не просто картинкой или видео, а чем-то , что вызывает эмоции и запоминается. Я люблю эксперименты, ценю детали и верю, что технологии могут усиливать творчество, а не подменять его. Именно это я и делаю в своих проектах.</p>
     </div>
   </section>
 
-  <!-- Ряд 2 -->
+  <!-- Ряд 2: слева превью-«стопка», справа короткий блок -->
   <section class="row-bottom">
     <div>
       <div class="stack" id="stack">
@@ -97,18 +166,24 @@
       <h2>Выставки и NFT</h2>
       <ul>
         <li><strong>2022–2023:</strong> первые AI-серии, NFT-релизы</li>
-        <li><strong>2023–2024:</strong> показы: Дубай, Нью-Йорк, Япония, Европа</li>
+        <li><strong>2023–2024:</strong> показы: Москва, Дубай, Нью-Йорк, Япония, Испания, Индонезия</li>
         <li><strong>2024–2025:</strong> fashion-визуалы, 3D-аватары, клипы</li>
       </ul>
     </div>
   </section>
 </main>
 
+<!-- мини-меню слева снизу -->
 <nav class="minimenu" aria-label="Мини-меню">
   <a href="about.html">обо мне</a>
   <a href="contact.html">контакты</a>
   <a href="index.html">главная</a>
 </nav>
+
+<!-- переключатель языка справа снизу -->
+<div class="langswitch" aria-label="Выбор языка">
+  <button type="button" data-lang="ru" class="active">RU</button>/<button type="button" data-lang="en">ENG</button>
+</div>
 
 <!-- Лайтбокс -->
 <div class="lightbox" id="lightbox">
@@ -118,11 +193,8 @@
     <img class="lb-img" id="lbImg" src="" alt="">
     <button class="lb-next" id="lbNext" aria-label="Вперёд">›</button>
 
-    <!-- Заголовок и мета -->
     <div class="lb-title" id="lbTitle"></div>
     <div class="lb-meta" id="lbMeta"></div>
-
-    <!-- Описание (Manrope), появляется по клику на картинку -->
     <div class="lb-desc bodytext" id="lbDesc"></div>
 
     <div class="lb-hint">Клик по изображению — описание · Esc / клик по фону — закрыть</div>
@@ -136,16 +208,16 @@
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  // Полные данные работ: Заголовок/Город/Год + описание
+  /* ===== Альбом: по клику ОТКРЫВАЕТСЯ; по крестику/фону/Esc ЗАКРЫВАЕТСЯ ===== */
   const gallery = [
     {src:'nft1.jpg', title:'Серия «Хром»,', city:'Дубай', year:'2023', desc:'Исследование отражающих поверхностей и неонового света в контексте урбан-мифологии.'},
     {src:'nft2.jpg', title:'«Ветер внутри»,', city:'Токио', year:'2024', desc:'Гибридные портреты: смешение AI-рендеров и ручной пост-обработки.'},
     {src:'nft3.jpg', title:'«Сон на плёнке»,', city:'Нью-Йорк', year:'2024', desc:'Имитация плёночных артефактов через генеративные шумы и зерно.'},
-    {src:'nft4.jpg', title:'«Эхо»,', city:'Лиссабон', year:'2024', desc:'Мягкая монохромная пластика, работа со звуковой волной как формой.'},
+    {src:'nft4.jpg', title:'«Эхо»,', city:'Лиссабон', year:'2024', desc:'Монохромная пластика. Звуковая волна как форма композиции.'},
     {src:'nft5.jpg', title:'«Грань мира»,', city:'Бали', year:'2023', desc:'Тропический сюр и жидкий металл в одном кадре.'},
     {src:'nft6.jpg', title:'«Ligature»,', city:'Тбилиси', year:'2025', desc:'Связки шейпов и типографики в телесных текстурах.'},
     {src:'nft7.jpg', title:'«Afterlight»,', city:'Париж', year:'2025', desc:'Переосмысление контражура и бликов как нарратива.'},
-    {src:'nft8.jpg', title:'«Zero Hour»,', city:'Берлин', year:'2025', desc:'Отчуждённые пространства и фигуры на стыке сна и архитектуры.'}
+    {src:'nft8.jpg', title:'«Zero Hour»,', city:'Берлин', year:'2025', desc:'Отчуждённые пространства на стыке сна и архитектуры.'}
   ];
 
   const stack = document.getElementById('stack');
@@ -164,25 +236,59 @@
     const g = gallery[gi];
     lbImg.src = g.src;
     lbTitle.textContent = `${g.title} ${g.city} — ${g.year}`;
-    lbMeta.textContent = ''; // если захочешь — добавим длительность, тираж и т.п.
-    lbDesc.textContent = g.desc || '';
+    lbMeta.textContent  = ''; // для доп.метаданных при желании
+    lbDesc.textContent  = g.desc || '';
     lbDesc.classList.remove('show');
   }
-  function openLB(i=0){ gi=i; renderLB(); lb.classList.add('open'); }
+  function openLB(i=0){ gi = i; renderLB(); lb.classList.add('open'); }
   function closeLB(){ lb.classList.remove('open'); }
+
   function prevLB(e){ gi=(gi-1+gallery.length)%gallery.length; renderLB(); if(e) e.stopPropagation(); }
   function nextLB(e){ gi=(gi+1)%gallery.length; renderLB(); if(e) e.stopPropagation(); }
 
-  // Открытие по клику на стопку
+  // Открытие — клик по ЛЮБОЙ точке «stack» или карточке
   stack.addEventListener('click', (e)=>{
-    const t = e.target.closest('.card'); if(!t) return;
-    openLB(Number(t.dataset.idx||0));
+    const card = e.target.closest('.card');
+    const idx  = Number(card?.dataset.idx ?? 0);
+    openLB(idx);
   });
 
-  // Показ описания по клику на изображение
+  // Показ/скрытие описания — клик по большому изображению
   lbImg.addEventListener('click', ()=> lbDesc.classList.toggle('show'));
 
   // Управление
   lbPrev.addEventListener('click', prevLB);
   lbNext.addEventListener('click', nextLB);
-  lbClose.addEventListener('
+  lbClose.addEventListener('click', (e)=>{ e.stopPropagation(); closeLB(); });
+  // клик по фону (за пределами .lb-inner)
+  lb.addEventListener('click', (e)=>{ if(e.target === lb) closeLB(); });
+  lb.addEventListener('dblclick', closeLB);
+  document.addEventListener('keydown', (e)=>{ if(lb.classList.contains('open') && e.key==='Escape') closeLB(); });
+  lbInner.addEventListener('click', (e)=> e.stopPropagation());
+
+  // Плейсхолдеры, если превью отсутствуют
+  document.querySelectorAll('.card img').forEach(img=>{
+    img.addEventListener('error', ()=>{
+      const d = document.createElement('div');
+      d.style.display='grid'; d.style.placeItems='center';
+      d.style.width='100%'; d.style.height='100%';
+      d.style.background='linear-gradient(180deg,#0a0a0a,#111)';
+      d.style.color='#777'; d.style.fontSize='12px';
+      d.textContent = 'Добавьте '+img.getAttribute('src');
+      img.replaceWith(d);
+    }, {once:true});
+  });
+
+  /* ===== Переключатель RU/ENG (UI + запоминание) ===== */
+  const btns = document.querySelectorAll('.langswitch [data-lang]');
+  const saveLang = (l)=> localStorage.setItem('lang', l);
+  const applyLang = (l)=>{
+    btns.forEach(b=> b.classList.toggle('active', b.dataset.lang===l));
+    document.documentElement.setAttribute('lang', l);
+    // Когда будет английский текст — здесь подставим перевод
+  };
+  btns.forEach(b=> b.addEventListener('click', ()=>{ saveLang(b.dataset.lang); applyLang(b.dataset.lang); }));
+  applyLang(localStorage.getItem('lang') || 'ru');
+</script>
+</body>
+</html>
