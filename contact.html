@@ -10,27 +10,27 @@
   :root{ --bg:#000; --text:#e9eaec; --muted:#9da0a6; --edge:#171717; }
   *{box-sizing:border-box} html{scroll-behavior:smooth}
   body{margin:0; background:var(--bg); color:var(--text); font-family:Inter, system-ui, -apple-system, Arial, sans-serif}
-  h2{font-weight:800; letter-spacing:-.01em; font-size:clamp(22px,3.2vw,36px); margin:0 0 12px}
-  p{margin:0 0 10px; color:#d8dbe1}
+  h2{font-weight:800; letter-spacing:-.01em; font-size:clamp(22px,3.2vw,36px); margin:0}
 
+  /* мини-меню (везде одно) */
   .minimenu{ position:fixed; left:14px; bottom:14px; z-index:30; display:flex; flex-direction:column; gap:6px;
     font-size:12px; letter-spacing:.08em; background:rgba(0,0,0,.5); backdrop-filter:blur(6px);
     padding:8px 10px; border-radius:10px; border:1px solid #111; }
   .minimenu a{ color:#cfcfd4; text-decoration:none }
 
-  .wrap{ padding:64px 24px 110px; max-width:900px; margin:0 auto }
+  .wrap{ padding:64px 24px 110px; max-width:900px; margin:0 auto; text-align:center }
 
-  /* строки контактов с иконками и видимыми ID */
-  .contacts{ display:grid; gap:12px; margin-top:12px }
-  .contact-row{
-    display:flex; align-items:center; gap:12px;
-    padding:14px; border:1px solid #1a1a1a; border-radius:8px; background:#0b0b0b;
+  /* блок ссылок — по центру, без «плашек», ниже страницы */
+  .contacts{
+    display:flex; flex-direction:column; align-items:center; gap:18px;
+    margin-top:8vh;
   }
-  .icon{ width:22px; height:22px; display:inline-block; }
-  .handle a{ color:#e9eaec; text-decoration:none; font-weight:600 }
+  .contact-row{ display:flex; align-items:center; gap:12px; }
+  .icon{ width:22px; height:22px; display:inline-block }
+  .handle a{ color:#e9eaec; text-decoration:none; font-weight:600; font-size:18px }
 
-  /* слоган — одна строка и ниже середины */
-  .slogan-box{ height:45vh; display:grid; place-items:center; }
+  /* слоган — одна строка, ещё ниже центра */
+  .slogan-box{ margin-top:12vh; display:grid; place-items:center; }
   .contact-slogan{ white-space:nowrap; font-weight:600; letter-spacing:.01em; color:#cfd1d6 }
 
   .foot{ padding:30px 24px; border-top:1px solid var(--edge); color:#8c8d91; text-align:center; font-size:12px }
@@ -42,10 +42,8 @@
   <h2>Контакты</h2>
 
   <div class="contacts">
-    <!-- Instagram @imnotdiller -->
     <div class="contact-row">
       <span class="icon" aria-hidden="true">
-        <!-- IG SVG -->
         <svg viewBox="0 0 24 24" fill="none" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
           <rect x="3" y="3" width="18" height="18" rx="5" stroke="#e9eaec" stroke-width="1.5"/>
           <circle cx="12" cy="12" r="4" stroke="#e9eaec" stroke-width="1.5"/>
@@ -55,7 +53,6 @@
       <span class="handle"><a href="https://www.instagram.com/imnotdiller" target="_blank" rel="noopener">@imnotdiller</a></span>
     </div>
 
-    <!-- Instagram @nadobroart_neuro -->
     <div class="contact-row">
       <span class="icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
@@ -67,10 +64,8 @@
       <span class="handle"><a href="https://www.instagram.com/nadobroart_neuro" target="_blank" rel="noopener">@nadobroart_neuro</a></span>
     </div>
 
-    <!-- Telegram группа -->
     <div class="contact-row">
       <span class="icon" aria-hidden="true">
-        <!-- TG SVG -->
         <svg viewBox="0 0 24 24" fill="none" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
           <path d="M21 5L3 12l6 2 8-8-6 10v3l3-2" stroke="#e9eaec" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
@@ -78,10 +73,8 @@
       <span class="handle"><a href="https://t.me/nadobroart_neuro" target="_blank" rel="noopener">@nadobroart_neuro</a></span>
     </div>
 
-    <!-- Email -->
     <div class="contact-row">
       <span class="icon" aria-hidden="true">
-        <!-- Mail SVG -->
         <svg viewBox="0 0 24 24" fill="none" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
           <path d="M4 6h16v12H4z" stroke="#e9eaec" stroke-width="1.5"/>
           <path d="M4 7l8 6 8-6" stroke="#e9eaec" stroke-width="1.5" stroke-linecap="round"/>
@@ -96,7 +89,6 @@
   </div>
 </main>
 
-<!-- мини-меню слева снизу -->
 <nav class="minimenu" aria-label="Мини-меню">
   <a href="about.html">обо мне</a>
   <a href="contact.html">контакты</a>
