@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Анастасия — Интер-дизайнер / AI</title>
 <meta name="description" content="Интер-дизайнер, ИИ-креатор, промт-инженер. Видео-фон, кинематографичный первый экран, вылетающие работы.">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{ --bg:#000; --text:#e9eaec; --muted:#9da0a6; --edge:#171717; --max:1300px; --radius:16px; --fade:550ms; }
+  :root{ --bg:#000; --text:#e9eaec; --muted:#9da0a6; --edge:#171717; --max:1300px; --radius:16px; --fade:600ms; }
   *{box-sizing:border-box} html{scroll-behavior:smooth}
   body{margin:0; background:var(--bg); color:var(--text); font-family:Inter, system-ui, -apple-system, Arial, sans-serif}
 
-  /* Мини-меню (есть на всех страницах) */
+  /* Мини-меню */
   .minimenu{ position:fixed; left:14px; bottom:14px; z-index:30; display:flex; flex-direction:column; gap:6px;
     font-size:12px; letter-spacing:.08em; background:rgba(0,0,0,.5); backdrop-filter:blur(6px);
     padding:8px 10px; border-radius:10px; border:1px solid #111; }
@@ -25,27 +25,39 @@
   .hero__overlay{position:absolute; inset:0; background:rgba(0,0,0,.35)}
   .hero__inner{position:relative; z-index:2; height:100%; display:grid; place-items:center; text-align:center; padding:0 24px}
   .hero__title{ font-weight:900; letter-spacing:-.01em; line-height:.95; color:#fff; font-size:clamp(34px,8vw,112px);
-    opacity:0; transform:translateY(14px); transition:opacity var(--fade) ease, transform var(--fade) ease; }
+    opacity:0; transform:translateY(20px); transition:opacity var(--fade) ease, transform var(--fade) ease; }
   .hero.loaded .hero__title{opacity:1; transform:none}
   .scroll-indicator{position:absolute; left:50%; bottom:24px; transform:translateX(-50%); color:var(--muted); font-size:12px; letter-spacing:.12em; opacity:.8}
 
-  /* 2-я надпись */
+  /* 2-я надпись — вылет снизу, центр, перенос строки */
   .intro{min-height:60vh; display:grid; place-items:center; padding:12vh 24px 16vh}
-  .intro__text{ text-align:center; max-width:1100px; line-height:1.15; font-weight:800; font-size:clamp(18px,3.2vw,40px);
-    opacity:0; transform:translateY(18px); transition:opacity var(--fade) ease, transform var(--fade) ease; }
+  .intro__text{ 
+    text-align:center; max-width:1100px; line-height:1.15; font-weight:800; font-size:clamp(18px,3.2vw,40px);
+    opacity:0; transform:translateY(40px); transition:opacity var(--fade) cubic-bezier(.2,.7,.2,1), transform var(--fade) cubic-bezier(.2,.7,.2,1);
+  }
   .intro.show .intro__text{opacity:1; transform:none}
 
-  /* Работы (адаптивные пропорции) */
-  .album{border-top:1px solid var(--edge); padding:40px 0 80px}
-  .album__head{display:flex; justify-content:space-between; align-items:center; padding:0 24px; max-width:var(--max); margin:0 auto 10px;
-    color:var(--muted); font-size:12px; letter-spacing:.1em}
+  /* Работы — каждая «вылетает» снизу вверх */
+  .album{border-top:1px solid var(--edge); padding:20px 0 80px; position:relative; z-index:2}
+  .album__head{display:flex; justify-content:space-between; align-items:center;
+    padding:0 24px; max-width:var(--max); margin:0 auto 10px; color:var(--muted); font-size:12px; letter-spacing:.1em}
   .frames{position:relative; max-width:var(--max); margin:0 auto; padding:0 24px; display:grid; gap:28px}
-  .frame{ position:relative; border:1px solid var(--edge); border-radius:var(--radius); overflow:hidden; background:#0b0b0b;
-    transform:translateY(24px); opacity:0; transition:transform .7s ease, opacity .7s ease, box-shadow .5s ease; }
+  .frame{
+    position:relative; border:1px solid var(--edge); border-radius:var(--radius); overflow:hidden; background:#0b0b0b;
+    transform: translateY(60px); opacity:0;
+    transition: transform .7s cubic-bezier(.2,.7,.2,1), opacity .7s ease, box-shadow .5s ease;
+  }
   .frame.appear{ transform:translateY(0); opacity:1 }
-  .frame img{display:block; width:100%; height:auto; object-fit:contain; background:#000}
-  .frame .cap{position:absolute; left:14px; bottom:12px; padding:6px 10px; font-size:12px; color:#d7d9dd; background:rgba(0,0,0,.35); border-radius:8px; backdrop-filter:blur(3px)}
+  .frame img{display:block; width:100%; height:auto; object-fit:contain; background:#000; cursor:pointer}
+  .frame .cap{position:absolute; left:14px; bottom:12px; padding:6px 10px; font-size:12px; color:#d7d9dd; background:rgba(0,0,0,.35); border-radius:8px; backdrop-filter: blur(3px)}
   .frame:hover{ box-shadow:0 30px 80px rgba(0,0,0,.35) }
+
+  /* Описание под картинкой (скрыто, показывается по клику) — Manrope */
+  .frame__desc{
+    display:none; padding:12px 14px; border-top:1px solid #121212; background:#0b0b0b;
+    font-family: Manrope, Inter, system-ui, -apple-system, Arial, sans-serif; color:#cfd1d6; font-size:14px; line-height:1.5;
+  }
+  .frame.open .frame__desc{ display:block }
 
   .foot{padding:30px 24px; border-top:1px solid var(--edge); color:#8c8d91; text-align:center; font-size:12px}
 </style>
@@ -64,24 +76,52 @@
   <div class="scroll-indicator">SCROLL</div>
 </section>
 
-<!-- 2-я надпись (с коротким тире) -->
+<!-- 2-я надпись (перенос на вторую строку) -->
 <section class="intro" id="intro">
-  <div class="intro__text">Анастасия - интер-дизайнер, ИИ-креатор, промт-инженер</div>
+  <div class="intro__text">
+    Анастасия — AI-креатор, prompt-инженер<br />
+    и мультидисциплинарный дизайнер
+  </div>
 </section>
 
 <!-- Работы -->
 <section class="album" id="album">
   <div class="album__head"><span>КАДРЫ</span><span>листай вниз</span></div>
   <div class="frames" id="frames">
-    <figure class="frame"><img class="f" src="frame1.jpg" alt="Кадр 1"><figcaption class="cap">Сцена 1</figcaption></figure>
-    <figure class="frame"><img class="f" src="frame2.jpg" alt="Кадр 2"><figcaption class="cap">Сцена 2</figcaption></figure>
-    <figure class="frame"><img class="f" src="frame3.jpg" alt="Кадр 3"><figcaption class="cap">Сцена 3</figcaption></figure>
-    <figure class="frame"><img class="f" src="frame4.jpg" alt="Кадр 4"><figcaption class="cap">Сцена 4</figcaption></figure>
-    <figure class="frame"><img class="f" src="frame5.jpg" alt="Кадр 5"><figcaption class="cap">Сцена 5</figcaption></figure>
+    <!-- Пример: добавь свои подписи внутри .frame__desc -->
+    <figure class="frame">
+      <img class="f" src="frame1.jpg" alt="Кадр 1">
+      <figcaption class="cap">Сцена 1</figcaption>
+      <div class="frame__desc">Описание кадра 1 — идея, техника, для какого проекта создано.</div>
+    </figure>
+
+    <figure class="frame">
+      <img class="f" src="frame2.jpg" alt="Кадр 2">
+      <figcaption class="cap">Сцена 2</figcaption>
+      <div class="frame__desc">Описание кадра 2.</div>
+    </figure>
+
+    <figure class="frame">
+      <img class="f" src="frame3.jpg" alt="Кадр 3">
+      <figcaption class="cap">Сцена 3</figcaption>
+      <div class="frame__desc">Описание кадра 3.</div>
+    </figure>
+
+    <figure class="frame">
+      <img class="f" src="frame4.jpg" alt="Кадр 4">
+      <figcaption class="cap">Сцена 4</figcaption>
+      <div class="frame__desc">Описание кадра 4.</div>
+    </figure>
+
+    <figure class="frame">
+      <img class="f" src="frame5.jpg" alt="Кадр 5">
+      <figcaption class="cap">Сцена 5</figcaption>
+      <div class="frame__desc">Описание кадра 5.</div>
+    </figure>
   </div>
 </section>
 
-<!-- Мини-меню (всегда) -->
+<!-- Мини-меню -->
 <nav class="minimenu" aria-label="Мини-меню">
   <a href="about.html">обо мне</a>
   <a href="contact.html">контакты</a>
@@ -93,43 +133,35 @@
 </footer>
 
 <script>
-  // Появление 1-й надписи
+  // 1) Появление 1-й надписи
   const hero = document.getElementById('hero');
   const bg = document.getElementById('bg');
   function showHeroTitle(){ hero.classList.add('loaded'); }
   if (bg) { bg.oncanplay = showHeroTitle; setTimeout(showHeroTitle, 800); }
 
-  // Появление 2-й надписи
+  // 2) Вылет 2-й надписи
   const intro = document.getElementById('intro');
-  const io = new IntersectionObserver((es)=>{ es.forEach(e=>{ if(e.isIntersecting){ intro.classList.add('show'); } }); }, {threshold:.25});
+  const io = new IntersectionObserver((es)=>{ es.forEach(e=>{ intro.classList.toggle('show', e.isIntersecting); }); }, {threshold:.35});
   io.observe(intro);
 
-  // «Смахивание» видео при входе в альбом
+  // 3) «Смахивание» видео при входе в альбом
   const album = document.getElementById('album');
-  const io2 = new IntersectionObserver((es)=>{ es.forEach(e=>{ if(e.isIntersecting){ hero.classList.add('wipe'); } }); }, {threshold:.15});
+  const io2 = new IntersectionObserver((es)=>{ es.forEach(e=>{ if(e.isIntersecting){ hero.classList.add('wipe'); } else { hero.classList.remove('wipe'); } }); }, {threshold:.15});
   io2.observe(album);
 
-  // Вылет кадров
+  // 4) Вылет кадров и открытие описания
   const frames = [...document.querySelectorAll('.frame')];
   const io3 = new IntersectionObserver((es)=>{
-    es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('appear'); io3.unobserve(e.target); }});
-  }, {threshold:.25});
-  frames.forEach(f => io3.observe(f));
-
-  // Лёгкий параллакс
-  function parallax(){
-    const center = window.innerHeight * .6;
-    frames.forEach(el=>{
-      const r = el.getBoundingClientRect();
-      const d = (r.top + r.height/2) - center;
-      el.style.setProperty('--shift', Math.round(d * -0.03));
+    es.forEach(e=>{
+      e.target.classList.toggle('appear', e.isIntersecting);
     });
-  }
-  window.addEventListener('scroll', parallax, {passive:true});
-  window.addEventListener('resize', parallax);
-  parallax();
+  }, {threshold:.25});
+  frames.forEach(f => {
+    io3.observe(f);
+    f.querySelector('img')?.addEventListener('click', ()=> f.classList.toggle('open'));
+  });
 
-  // Год в футере
+  // 5) Год в футере
   document.getElementById('year').textContent = new Date().getFullYear();
 </script>
 </body>
