@@ -8,10 +8,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
 <style>
   :root{ --bg:#000; --text:#e9eaec; --muted:#9da0a6; --edge:#171717; --max:1300px; --radius:14px; }
-  *{box-sizing:border-box} html{scroll-behavior:smooth}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
   body{margin:0; background:var(--bg); color:var(--text); font-family:Inter, system-ui, -apple-system, Arial, sans-serif}
+
   h2{font-weight:800; letter-spacing:-.01em; font-size:clamp(22px,3.2vw,36px); margin:0 0 14px}
-  p{margin:0 0 10px; color:#d8dbe1; line-height:1.5}
+  p{margin:0 0 10px; color:#d8dbe1; line-height:1.55}
 
   /* мини-меню (всегда) */
   .minimenu{ position:fixed; left:14px; bottom:14px; z-index:30; display:flex; flex-direction:column; gap:6px;
@@ -19,35 +21,25 @@
     padding:8px 10px; border-radius:10px; border:1px solid #111; }
   .minimenu a{ color:#cfcfd4; text-decoration:none }
 
-  .wrap{ padding:64px 24px 110px; max-width:var(--max); margin:0 auto }
+  .wrap{ padding:64px 24px 110px; max-width:var(--max); margin:0 auto; }
 
-  /* ВЕРХ: фото слева, текст справа — по верхнему краю, ровно по сетке */
-  .about-hero{
-    display:grid;
-    grid-template-columns: 5fr 7fr; /* фото 5/12, текст 7/12 */
-    gap:40px; align-items:start;
-  }
-  .about-photo{
-    width:100%; aspect-ratio:3/4; object-fit:cover;
-    background:#0b0b0b; border:1px solid var(--edge); border-radius:12px;
-  }
-  .about-intro{display:flex; flex-direction:column; gap:10px}
-
-  /* НИЖЕ: «Выставки» — слева стопка из 3 превью, справа текст */
-  .exhibits{
-    margin-top:56px;
-    display:grid; grid-template-columns:5fr 7fr; gap:40px; align-items:start;
+  /* Ряд 1: слева фото, справа текст (ровно по верхам) */
+  .row{ display:grid; grid-template-columns: 5fr 7fr; gap:40px; align-items:start; }
+  .photo{
+    width:100%; aspect-ratio:3/4; object-fit:cover; background:#0b0b0b;
+    border:1px solid var(--edge); border-radius:12px;
   }
 
-  /* стопка превью (аккуратный «нахлёст») */
+  /* Ряд 2: слева кликабельный «значок альбома» (стопка), справа краткий текст */
+  .row-bottom{ margin-top:56px; display:grid; grid-template-columns:5fr 7fr; gap:40px; align-items:start; }
+
   .stack{
-    position:relative; height:min(48vw, 420px); /* адаптивная высота */
-    max-width:520px; margin:0 auto 0 0;
+    position:relative; height:min(48vw, 420px); max-width:520px;
   }
   .card{
     position:absolute; top:0; left:0; width:78%; aspect-ratio:4/3;
     border:1px solid var(--edge); border-radius:12px; overflow:hidden; background:#0b0b0b;
-    box-shadow:0 20px 60px rgba(0,0,0,.35);
+    box-shadow:0 20px 60px rgba(0,0,0,.35); cursor:pointer;
   }
   .card img{width:100%; height:100%; object-fit:cover; display:block; transition:transform .35s ease}
   .card:nth-child(1){ transform:rotate(-6deg) translate(-8px, 8px); z-index:1}
@@ -56,17 +48,18 @@
   .stack:hover .card img{ transform:scale(1.04) }
   .stack-note{position:absolute; bottom:-22px; left:0; font-size:12px; color:#9aa0a6}
 
-  .exhibit-text ul{ margin:10px 0 0 18px; color:#cfcfd4; line-height:1.5 }
+  .right-col p, .right-col ul{max-width:60ch}
+  .right-col ul{ margin:10px 0 0 18px; color:#cfcfd4; line-height:1.55 }
 
   @media (max-width:980px){
-    .about-hero{grid-template-columns:1fr}
-    .exhibits{grid-template-columns:1fr; gap:22px}
+    .row{grid-template-columns:1fr}
+    .row-bottom{grid-template-columns:1fr; gap:22px}
     .stack{ position:static; height:auto; display:grid; grid-template-columns:1fr; gap:10px; max-width:none }
-    .card{ position:relative; width:100%; transform:none; aspect-ratio:4/3 }
+    .card{ position:relative; width:100%; transform:none }
     .stack-note{ position:static; margin-top:6px }
   }
 
-  /* Лайтбокс-альбом */
+  /* Лайтбокс (только по клику) */
   .lightbox{ position:fixed; inset:0; display:none; place-items:center; background:rgba(0,0,0,.86); z-index:100 }
   .lightbox.open{ display:grid }
   .lb-inner{ position:relative; width:min(92vw,1200px) }
@@ -87,33 +80,34 @@
 <body>
 
 <main class="wrap">
-  <!-- верх: слева фото, справа твой текст (без изменений) -->
-  <section class="about-hero">
-    <img class="about-photo" src="portrait.jpg" alt="Портрет Анастасии">
-    <div class="about-intro">
+  <!-- ряд 1: слева фото / справа «Обо мне» -->
+  <section class="row">
+    <img class="photo" src="portrait.jpg" alt="Портрет Анастасии">
+    <div class="right-col">
       <h2>Обо мне</h2>
       <p>Привет, я Анастасия 👋 Я создаю визуальные истории с помощью ИИ и привычных графических инструментов, соединяя эстетику, технологии и атмосферу. Мой путь начался с классического дизайна и digital-арта, выставок в Дубае, Нью-Йорке, Японии и Европе. Сегодня мой фокус - новые форматы в ИИ-креативе: fashion-визуалы, 3D-аватары, клипы и проекты с ярким сторителлингом для брендов.</p>
       <p>Для меня важно, чтобы каждая работа была не просто картинкой или видео, а чем-то , что вызывает эмоции и запоминается. Я люблю эксперименты, ценю детали и верю, что технологии могут усиливать творчество, а не подменять его. Именно это я и делаю в своих проектах.</p>
     </div>
   </section>
 
-  <!-- ниже: «Выставки» — слева стопка превью, справа текст -->
-  <section class="exhibits">
+  <!-- ряд 2: слева «значок альбома», справа краткий текст (путь/выставки) -->
+  <section class="row-bottom">
     <div>
       <div class="stack" id="stack">
-        <div class="card" data-idx="0"><img src="nft1.jpg" alt="Работа 1"></div>
-        <div class="card" data-idx="1"><img src="nft2.jpg" alt="Работа 2"></div>
-        <div class="card" data-idx="2"><img src="nft3.jpg" alt="Работа 3"></div>
-        <div class="stack-note">Наведи / нажми — откроется альбом</div>
+        <div class="card" data-idx="0"><img src="nft1.jpg" alt="Превью 1"></div>
+        <div class="card" data-idx="1"><img src="nft2.jpg" alt="Превью 2"></div>
+        <div class="card" data-idx="2"><img src="nft3.jpg" alt="Превью 3"></div>
       </div>
+      <div class="stack-note">Нажмите, чтобы открыть альбом (8 фото)</div>
     </div>
-    <div class="exhibit-text">
+
+    <div class="right-col">
       <h2>Выставки и NFT</h2>
-      <p>Несколько лет строю визуальные миры с упором на атмосферу и ощутимую фактуру кадра. Выставлялась в Дубае, Нью-Йорке, Бали, Японии, Португалии. Работаю с брендами и артистами, собираю кампании без тяжёлой офлайн-съёмки.</p>
+      <!-- короткий блок под «путь по годам» — позже подставим реальные пункты -->
       <ul>
-        <li>AI-контент: fashion, продуктовые сцены, нейро-портреты</li>
-        <li>Продающие рилсы и клипы: идея → визуал → монтаж → звук</li>
-        <li>NFT-опыт, международные показы</li>
+        <li><strong>2022–2023:</strong> первые AI-серии, NFT-релизы</li>
+        <li><strong>2023–2024:</strong> показы: Дубай, Нью-Йорк, Япония, Европа</li>
+        <li><strong>2024–2025:</strong> fashion-визуалы, 3D-аватары, клипы</li>
       </ul>
     </div>
   </section>
@@ -126,7 +120,7 @@
   <a href="index.html">главная</a>
 </nav>
 
-<!-- лайтбокс-альбом на 8 работ -->
+<!-- лайтбокс-альбом (8 фото) -->
 <div class="lightbox" id="lightbox">
   <div class="lb-inner">
     <button class="lb-close" id="lbClose" aria-label="Закрыть">×</button>
@@ -134,7 +128,7 @@
     <img class="lb-img" id="lbImg" src="" alt="">
     <button class="lb-next" id="lbNext" aria-label="Вперёд">›</button>
     <div class="lb-cap" id="lbCap"></div>
-    <div class="lb-hint">Двойной клик — закрыть</div>
+    <div class="lb-hint">Щёлкните по фону или Esc — закрыть</div>
   </div>
 </div>
 
@@ -146,7 +140,7 @@
   // год
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  // Галерея (8 фото)
+  // Альбом: только по клику, с надёжным закрытием
   const gallery = [
     {src:'nft1.jpg', cap:'Работа 1 — описание/серия/год'},
     {src:'nft2.jpg', cap:'Работа 2 — описание/серия/год'},
@@ -160,6 +154,7 @@
 
   const stack = document.getElementById('stack');
   const lb = document.getElementById('lightbox');
+  const lbInner = lb.querySelector('.lb-inner');
   const lbImg = document.getElementById('lbImg');
   const lbCap = document.getElementById('lbCap');
   const lbPrev = document.getElementById('lbPrev');
@@ -170,34 +165,30 @@
   function renderLB(){ lbImg.src = gallery[gi].src; lbCap.textContent = gallery[gi].cap; }
   function openLB(i=0){ gi=i; renderLB(); lb.classList.add('open'); }
   function closeLB(){ lb.classList.remove('open'); }
-  function prevLB(){ gi=(gi-1+gallery.length)%gallery.length; renderLB(); }
-  function nextLB(){ gi=(gi+1)%gallery.length; renderLB(); }
 
-  // открыть по наведению (десктоп) или по клику (тач/мобайл)
-  const prefersHover = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
-  if (prefersHover) {
-    stack.addEventListener('mouseenter', (e)=>{
-      const t = e.target.closest('.card'); const idx = Number(t?.dataset.idx || 0);
-      openLB(idx);
-    });
-  }
+  function prevLB(e){ gi=(gi-1+gallery.length)%gallery.length; renderLB(); if(e) e.stopPropagation(); }
+  function nextLB(e){ gi=(gi+1)%gallery.length; renderLB(); if(e) e.stopPropagation(); }
+
+  // Открытие — ТОЛЬКО по клику на любую карточку
   stack.addEventListener('click', (e)=>{
-    const t = e.target.closest('.card'); const idx = Number(t?.dataset.idx || 0);
+    const t = e.target.closest('.card'); if(!t) return;
+    const idx = Number(t.dataset.idx||0);
     openLB(idx);
   });
 
+  // Закрытие: крестик, фон, Esc, двойной клик
+  lbClose.addEventListener('click', (e)=>{ e.stopPropagation(); closeLB(); });
+  lb.addEventListener('click', (e)=>{ if(e.target === lb) closeLB(); });            // клик по фону
+  lb.addEventListener('dblclick', closeLB);
+  document.addEventListener('keydown', (e)=>{ if(lb.classList.contains('open') && e.key==='Escape') closeLB(); });
+
   lbPrev.addEventListener('click', prevLB);
   lbNext.addEventListener('click', nextLB);
-  lbClose.addEventListener('click', closeLB);
-  lb.addEventListener('dblclick', closeLB);
-  document.addEventListener('keydown', e=>{
-    if(!lb.classList.contains('open')) return;
-    if(e.key==='Escape') closeLB();
-    if(e.key==='ArrowLeft') prevLB();
-    if(e.key==='ArrowRight') nextLB();
-  });
 
-  // Плейсхолдеры, если превью нет
+  // Чтобы клики внутри контейнера не закрывали по фону
+  lbInner.addEventListener('click', (e)=> e.stopPropagation());
+
+  // Плейсхолдеры для отсутствующих изображений превью
   document.querySelectorAll('.card img').forEach(img=>{
     img.addEventListener('error', ()=>{
       const d = document.createElement('div');
