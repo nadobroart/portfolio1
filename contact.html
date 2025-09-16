@@ -5,33 +5,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Контакты — Анастасия</title>
 <meta name="description" content="Контакты: Instagram, Telegram, Email.">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{ --bg:#000; --text:#e9eaec; --muted:#9da0a6; --edge:#171717; }
   *{box-sizing:border-box} html{scroll-behavior:smooth}
   body{margin:0; background:var(--bg); color:var(--text); font-family:Inter, system-ui, -apple-system, Arial, sans-serif}
   h2{font-weight:800; letter-spacing:-.01em; font-size:clamp(22px,3.2vw,36px); margin:0}
 
-  /* мини-меню (везде одно) */
   .minimenu{ position:fixed; left:14px; bottom:14px; z-index:30; display:flex; flex-direction:column; gap:6px;
     font-size:12px; letter-spacing:.08em; background:rgba(0,0,0,.5); backdrop-filter:blur(6px);
     padding:8px 10px; border-radius:10px; border:1px solid #111; }
   .minimenu a{ color:#cfcfd4; text-decoration:none }
 
-  .wrap{ padding:64px 24px 110px; max-width:900px; margin:0 auto; text-align:center }
+  .langswitch{ position:fixed; right:14px; bottom:14px; z-index:30; display:flex; gap:10px;
+    font-size:12px; letter-spacing:.08em; background:rgba(0,0,0,.5); backdrop-filter:blur(6px);
+    padding:8px 10px; border-radius:10px; border:1px solid #111; }
+  .langswitch button{ appearance:none; background:transparent; border:none; color:#cfcfd4; cursor:pointer; padding:0 2px; font:inherit; opacity:.8; text-transform:uppercase }
+  .langswitch button.active{ opacity:1; color:#fff; text-decoration:underline; text-underline-offset:3px }
 
-  /* блок ссылок — по центру, без «плашек», ниже страницы */
-  .contacts{
-    display:flex; flex-direction:column; align-items:center; gap:18px;
-    margin-top:8vh;
-  }
-  .contact-row{ display:flex; align-items:center; gap:12px; }
+  .wrap{ padding:64px 24px 110px; max-width:900px; margin:0 auto; text-align:center }
+  .contacts{ display:flex; flex-direction:column; align-items:center; gap:18px; margin-top:8vh }
+  .contact-row{ display:flex; align-items:center; gap:12px; font-family: Raleway, Inter, system-ui, -apple-system, Arial, sans-serif; }
   .icon{ width:22px; height:22px; display:inline-block }
   .handle a{ color:#e9eaec; text-decoration:none; font-weight:600; font-size:18px }
 
-  /* слоган — одна строка, ещё ниже центра */
   .slogan-box{ margin-top:12vh; display:grid; place-items:center; }
-  .contact-slogan{ white-space:nowrap; font-weight:600; letter-spacing:.01em; color:#cfd1d6 }
+  .contact-slogan{ white-space:nowrap; font-weight:600; letter-spacing:.01em; color:#cfd1d6; font-family: Raleway, Inter, system-ui, -apple-system, Arial, sans-serif; }
 
   .foot{ padding:30px 24px; border-top:1px solid var(--edge); color:#8c8d91; text-align:center; font-size:12px }
 </style>
@@ -94,6 +93,9 @@
   <a href="contact.html">контакты</a>
   <a href="index.html">главная</a>
 </nav>
+<div class="langswitch" aria-label="Выбор языка">
+  <button type="button" data-lang="ru" class="active">RU</button>/<button type="button" data-lang="en">ENG</button>
+</div>
 
 <footer class="foot">
   <small>© <span id="year"></span> Анастасия</small>
@@ -101,6 +103,13 @@
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  // RU/ENG UI (пока только переключатель)
+  const btns = document.querySelectorAll('.langswitch [data-lang]');
+  const saveLang = (l)=> localStorage.setItem('lang', l);
+  const applyLang = (l)=>{ btns.forEach(b=> b.classList.toggle('active', b.dataset.lang===l)); document.documentElement.setAttribute('lang', l); };
+  btns.forEach(b=> b.addEventListener('click', ()=>{ saveLang(b.dataset.lang); applyLang(b.dataset.lang); }));
+  applyLang(localStorage.getItem('lang') || 'ru');
 </script>
 </body>
 </html>
