@@ -4,18 +4,25 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Анастасия — Интер-дизайнер / AI</title>
-<meta name="description" content="Интер-дизайнер, ИИ-креатор, промт-инженер. Видео-фон, кинематографичный первый экран, вылетающие работы.">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="description" content="Интер-дизайнер, ИИ-креатор, промт-инженер. Видео-фон, вылетающие тексты и кадры.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{ --bg:#000; --text:#e9eaec; --muted:#9da0a6; --edge:#171717; --max:1300px; --radius:16px; --fade:600ms; }
   *{box-sizing:border-box} html{scroll-behavior:smooth}
   body{margin:0; background:var(--bg); color:var(--text); font-family:Inter, system-ui, -apple-system, Arial, sans-serif}
 
-  /* Мини-меню */
+  /* мини-меню слева снизу */
   .minimenu{ position:fixed; left:14px; bottom:14px; z-index:30; display:flex; flex-direction:column; gap:6px;
     font-size:12px; letter-spacing:.08em; background:rgba(0,0,0,.5); backdrop-filter:blur(6px);
     padding:8px 10px; border-radius:10px; border:1px solid #111; }
   .minimenu a{ color:#cfcfd4; text-decoration:none }
+
+  /* RU/ENG справа снизу */
+  .langswitch{ position:fixed; right:14px; bottom:14px; z-index:30; display:flex; gap:10px;
+    font-size:12px; letter-spacing:.08em; background:rgba(0,0,0,.5); backdrop-filter:blur(6px);
+    padding:8px 10px; border-radius:10px; border:1px solid #111; }
+  .langswitch button{ appearance:none; background:transparent; border:none; color:#cfcfd4; cursor:pointer; padding:0 2px; font:inherit; opacity:.8; text-transform:uppercase }
+  .langswitch button.active{ opacity:1; color:#fff; text-decoration:underline; text-underline-offset:3px }
 
   /* HERO */
   .hero{position:relative; height:100vh; overflow:hidden}
@@ -29,15 +36,16 @@
   .hero.loaded .hero__title{opacity:1; transform:none}
   .scroll-indicator{position:absolute; left:50%; bottom:24px; transform:translateX(-50%); color:var(--muted); font-size:12px; letter-spacing:.12em; opacity:.8}
 
-  /* 2-я надпись — вылет снизу, центр, перенос строки */
+  /* 2-я надпись (Raleway, по центру, вылет снизу) */
   .intro{min-height:60vh; display:grid; place-items:center; padding:12vh 24px 16vh}
   .intro__text{ 
-    text-align:center; max-width:1100px; line-height:1.15; font-weight:800; font-size:clamp(18px,3.2vw,40px);
+    text-align:center; max-width:1100px; line-height:1.2; font-weight:800; font-size:clamp(18px,3.2vw,40px);
     opacity:0; transform:translateY(40px); transition:opacity var(--fade) cubic-bezier(.2,.7,.2,1), transform var(--fade) cubic-bezier(.2,.7,.2,1);
+    font-family: Raleway, Inter, system-ui, -apple-system, Arial, sans-serif;
   }
   .intro.show .intro__text{opacity:1; transform:none}
 
-  /* Работы — каждая «вылетает» снизу вверх */
+  /* Работы — «вылет» снизу по одной; описания по клику (Raleway) */
   .album{border-top:1px solid var(--edge); padding:20px 0 80px; position:relative; z-index:2}
   .album__head{display:flex; justify-content:space-between; align-items:center;
     padding:0 24px; max-width:var(--max); margin:0 auto 10px; color:var(--muted); font-size:12px; letter-spacing:.1em}
@@ -51,12 +59,8 @@
   .frame img{display:block; width:100%; height:auto; object-fit:contain; background:#000; cursor:pointer}
   .frame .cap{position:absolute; left:14px; bottom:12px; padding:6px 10px; font-size:12px; color:#d7d9dd; background:rgba(0,0,0,.35); border-radius:8px; backdrop-filter: blur(3px)}
   .frame:hover{ box-shadow:0 30px 80px rgba(0,0,0,.35) }
-
-  /* Описание под картинкой (скрыто, показывается по клику) — Manrope */
-  .frame__desc{
-    display:none; padding:12px 14px; border-top:1px solid #121212; background:#0b0b0b;
-    font-family: Manrope, Inter, system-ui, -apple-system, Arial, sans-serif; color:#cfd1d6; font-size:14px; line-height:1.5;
-  }
+  .frame__desc{ display:none; padding:12px 14px; border-top:1px solid #121212; background:#0b0b0b;
+    font-family: Raleway, Inter, system-ui, -apple-system, Arial, sans-serif; color:#cfd1d6; font-size:14px; line-height:1.5; }
   .frame.open .frame__desc{ display:block }
 
   .foot{padding:30px 24px; border-top:1px solid var(--edge); color:#8c8d91; text-align:center; font-size:12px}
@@ -64,7 +68,6 @@
 </head>
 <body>
 
-<!-- HERO -->
 <section class="hero" id="hero">
   <video id="bg" autoplay muted loop playsinline>
     <source src="bg.mp4" type="video/mp4">
@@ -76,7 +79,6 @@
   <div class="scroll-indicator">SCROLL</div>
 </section>
 
-<!-- 2-я надпись (перенос на вторую строку) -->
 <section class="intro" id="intro">
   <div class="intro__text">
     Анастасия — AI-креатор, prompt-инженер<br />
@@ -84,85 +86,71 @@
   </div>
 </section>
 
-<!-- Работы -->
 <section class="album" id="album">
   <div class="album__head"><span>КАДРЫ</span><span>листай вниз</span></div>
   <div class="frames" id="frames">
-    <!-- Пример: добавь свои подписи внутри .frame__desc -->
     <figure class="frame">
-      <img class="f" src="frame1.jpg" alt="Кадр 1">
-      <figcaption class="cap">Сцена 1</figcaption>
-      <div class="frame__desc">Описание кадра 1 — идея, техника, для какого проекта создано.</div>
+      <img class="f" src="frame1.jpg" alt="Кадр 1"><figcaption class="cap">Сцена 1</figcaption>
+      <div class="frame__desc">Описание кадра 1 — идея, техника, контекст.</div>
     </figure>
-
     <figure class="frame">
-      <img class="f" src="frame2.jpg" alt="Кадр 2">
-      <figcaption class="cap">Сцена 2</figcaption>
+      <img class="f" src="frame2.jpg" alt="Кадр 2"><figcaption class="cap">Сцена 2</figcaption>
       <div class="frame__desc">Описание кадра 2.</div>
     </figure>
-
     <figure class="frame">
-      <img class="f" src="frame3.jpg" alt="Кадр 3">
-      <figcaption class="cap">Сцена 3</figcaption>
+      <img class="f" src="frame3.jpg" alt="Кадр 3"><figcaption class="cap">Сцена 3</figcaption>
       <div class="frame__desc">Описание кадра 3.</div>
     </figure>
-
     <figure class="frame">
-      <img class="f" src="frame4.jpg" alt="Кадр 4">
-      <figcaption class="cap">Сцена 4</figcaption>
+      <img class="f" src="frame4.jpg" alt="Кадр 4"><figcaption class="cap">Сцена 4</figcaption>
       <div class="frame__desc">Описание кадра 4.</div>
     </figure>
-
     <figure class="frame">
-      <img class="f" src="frame5.jpg" alt="Кадр 5">
-      <figcaption class="cap">Сцена 5</figcaption>
+      <img class="f" src="frame5.jpg" alt="Кадр 5"><figcaption class="cap">Сцена 5</figcaption>
       <div class="frame__desc">Описание кадра 5.</div>
     </figure>
   </div>
 </section>
 
-<!-- Мини-меню -->
 <nav class="minimenu" aria-label="Мини-меню">
   <a href="about.html">обо мне</a>
   <a href="contact.html">контакты</a>
   <a href="index.html">главная</a>
 </nav>
+<div class="langswitch" aria-label="Выбор языка">
+  <button type="button" data-lang="ru" class="active">RU</button>/<button type="button" data-lang="en">ENG</button>
+</div>
 
 <footer class="foot">
   <small>© <span id="year"></span> Анастасия</small>
 </footer>
 
 <script>
-  // 1) Появление 1-й надписи
   const hero = document.getElementById('hero');
   const bg = document.getElementById('bg');
   function showHeroTitle(){ hero.classList.add('loaded'); }
   if (bg) { bg.oncanplay = showHeroTitle; setTimeout(showHeroTitle, 800); }
 
-  // 2) Вылет 2-й надписи
   const intro = document.getElementById('intro');
   const io = new IntersectionObserver((es)=>{ es.forEach(e=>{ intro.classList.toggle('show', e.isIntersecting); }); }, {threshold:.35});
   io.observe(intro);
 
-  // 3) «Смахивание» видео при входе в альбом
   const album = document.getElementById('album');
-  const io2 = new IntersectionObserver((es)=>{ es.forEach(e=>{ if(e.isIntersecting){ hero.classList.add('wipe'); } else { hero.classList.remove('wipe'); } }); }, {threshold:.15});
+  const io2 = new IntersectionObserver((es)=>{ es.forEach(e=>{ hero.classList.toggle('wipe', e.isIntersecting); }); }, {threshold:.15});
   io2.observe(album);
 
-  // 4) Вылет кадров и открытие описания
   const frames = [...document.querySelectorAll('.frame')];
-  const io3 = new IntersectionObserver((es)=>{
-    es.forEach(e=>{
-      e.target.classList.toggle('appear', e.isIntersecting);
-    });
-  }, {threshold:.25});
-  frames.forEach(f => {
-    io3.observe(f);
-    f.querySelector('img')?.addEventListener('click', ()=> f.classList.toggle('open'));
-  });
+  const io3 = new IntersectionObserver((es)=>{ es.forEach(e=>{ e.target.classList.toggle('appear', e.isIntersecting); }); }, {threshold:.25});
+  frames.forEach(f => { io3.observe(f); f.querySelector('img')?.addEventListener('click', ()=> f.classList.toggle('open')); });
 
-  // 5) Год в футере
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  // RU/ENG UI (плейсхолдер)
+  const btns = document.querySelectorAll('.langswitch [data-lang]');
+  const saveLang = (l)=> localStorage.setItem('lang', l);
+  const applyLang = (l)=>{ btns.forEach(b=> b.classList.toggle('active', b.dataset.lang===l)); document.documentElement.setAttribute('lang', l); };
+  btns.forEach(b=> b.addEventListener('click', ()=>{ saveLang(b.dataset.lang); applyLang(b.dataset.lang); }));
+  applyLang(localStorage.getItem('lang') || 'ru');
 </script>
 </body>
 </html>
