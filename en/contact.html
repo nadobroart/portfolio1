@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Contacts — Anastasia</title>
+<meta name="description" content="Contacts: Instagram, Telegram, Email.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Возьми тот же CSS из RU contact.html, только заголовок оставь слева -->
+</head>
+<body>
+
+<main class="wrap">
+  <h2>Contacts</h2>
+
+  <div class="contacts">
+    <div class="contact-row">
+      <!-- те же SVG и ссылки, тексты не меняем: это хэндлы -->
+      <span class="handle"><a href="https://www.instagram.com/imnotdiller" target="_blank" rel="noopener">@imnotdiller</a></span>
+    </div>
+    <div class="contact-row"><span class="handle"><a href="https://www.instagram.com/nadobroart_neuro" target="_blank" rel="noopener">@nadobroart_neuro</a></span></div>
+    <div class="contact-row"><span class="handle"><a href="https://t.me/nadobroart_neuro" target="_blank" rel="noopener">@nadobroart_neuro</a></span></div>
+    <div class="contact-row"><span class="handle"><a href="mailto:nadobroart@gmail.com">nadobroart@gmail.com</a></span></div>
+  </div>
+
+  <div class="slogan-box">
+    <p class="contact-slogan">contact me — let’s craft your brand’s story together</p>
+  </div>
+</main>
+
+<nav class="minimenu" aria-label="Mini menu">
+  <a href="about.html">about</a>
+  <a href="contact.html">contacts</a>
+  <a href="index.html">home</a>
+</nav>
+<div class="langswitch" aria-label="Language">
+  <button type="button" data-lang="ru">RU</button>/<button type="button" data-lang="en" class="active">ENG</button>
+</div>
+
+<footer class="foot"><small>© <span id="year"></span> Anastasia</small></footer>
+
+<script>
+  document.getElementById('year').textContent=new Date().getFullYear();
+  const btns=document.querySelectorAll('.langswitch [data-lang]'); const file=(location.pathname.split('/').pop()||'index.html');
+  const go=(lang)=>{ if(lang==='ru') location.href='../'+file; else location.href=file; };
+  btns.forEach(b=>b.addEventListener('click',()=>go(b.dataset.lang)));
+</script>
+</body>
+</html>
