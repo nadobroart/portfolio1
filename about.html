@@ -98,7 +98,7 @@
     <div class="right-col bodytext">
       <h2>Обо мне</h2>
 
-      <p>Здравствуйте, я Анастасия, мне 26 лет. Имею высшее образование, Бакалавр на факультете Архитектуры и Дизайна. За спиной у меня объемный художественный бэкграунд и сейчас Я создаю визуальные истории с помощью ИИ и привычных графических инструментов, соединяя эстетику, технологии и атмосферу.</p>
+      <p>Здравствуйте, я Анастасия, мне 26 лет. Имею высшее образование, Бакалавр факультета Архитектуры и Дизайна. За спиной у меня объемный художественный бэкграунд и сейчас Я создаю визуальные истории с помощью ИИ и привычных графических инструментов, соединяя эстетику, технологии и атмосферу.</p>
 
       <p>Мой путь начался с классического дизайна и digital-арта, благодаря NFT я нашла свой стиль, нашла и приняла себя, и этот мир ответил мне взаимностью. Не раз я выставлялась в разных странах и городах: в Москве, Дубае, Нью-Йорке, Японии, Испании, Индонезии.</p>
 
@@ -162,7 +162,7 @@
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  // Данные альбома (название — город — год + описание)
+  /* ===== Альбом: открытие по НАВЕДЕНИЮ, закрытие по крестику/фону/Esc ===== */
   const gallery = [
     {src:'nft1.jpg', title:'Серия «Хром»,', city:'Дубай', year:'2023', desc:'Исследование отражающих поверхностей и неонового света в контексте урбан-мифологии.'},
     {src:'nft2.jpg', title:'«Ветер внутри»,', city:'Токио', year:'2024', desc:'Гибридные портреты: смешение AI-рендеров и ручной пост-обработки.'},
@@ -199,26 +199,26 @@
   function prevLB(e){ gi=(gi-1+gallery.length)%gallery.length; renderLB(); if(e) e.stopPropagation(); }
   function nextLB(e){ gi=(gi+1)%gallery.length; renderLB(); if(e) e.stopPropagation(); }
 
-  // Открытие: по наведению (desktop), по клику (touch)
+  // ОТКРЫТИЕ ПО НАВЕДЕНИЮ (desktop). Без задержек, без автозакрытия на mouseleave.
   const prefersHover = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
-  let hoverTimer=null;
   if (prefersHover) {
-    stack.addEventListener('mouseenter', (e)=>{
-      const t = e.target.closest('.card'); const idx = Number(t?.dataset.idx || 0);
-      hoverTimer = setTimeout(()=> openLB(idx), 120);
+    stack.addEventListener('mousemove', (e)=>{
+      const card = e.target.closest('.card'); if(!card) return;
+      const idx  = Number(card.dataset.idx||0);
+      if (!lb.classList.contains('open') || gi!==idx){ openLB(idx); }
     }, true);
-    stack.addEventListener('mouseleave', ()=>{ clearTimeout(hoverTimer); hoverTimer=null; closeLB(); }, true);
   }
-  // Fallback: клик
+  // Fallback для тача — по клику
   stack.addEventListener('click', (e)=>{
-    if (prefersHover) return; // на десктопе уже работает hover
-    const t = e.target.closest('.card'); const idx = Number(t?.dataset.idx || 0);
-    openLB(idx);
+    if (prefersHover) return;
+    const card = e.target.closest('.card'); if(!card) return;
+    openLB(Number(card.dataset.idx||0));
   });
 
-  // Показ описания — клик по большому изображению
+  // Показ/скрытие описания — клик по большому изображению
   lbImg.addEventListener('click', ()=> lbDesc.classList.toggle('show'));
 
+  // Управление и закрытие
   lbPrev.addEventListener('click', prevLB);
   lbNext.addEventListener('click', nextLB);
   lbClose.addEventListener('click', (e)=>{ e.stopPropagation(); closeLB(); });
@@ -227,12 +227,15 @@
   document.addEventListener('keydown', (e)=>{ if(lb.classList.contains('open') && e.key==='Escape') closeLB(); });
   lbInner.addEventListener('click', (e)=> e.stopPropagation());
 
-  // RU/ENG UI
+  /* ===== Переключатель RU/ENG как ссылки между страницами ===== */
   const btns = document.querySelectorAll('.langswitch [data-lang]');
-  const saveLang = (l)=> localStorage.setItem('lang', l);
-  const applyLang = (l)=>{ btns.forEach(b=> b.classList.toggle('active', b.dataset.lang===l)); document.documentElement.setAttribute('lang', l); };
-  btns.forEach(b=> b.addEventListener('click', ()=>{ saveLang(b.dataset.lang); applyLang(b.dataset.lang); }));
-  applyLang(localStorage.getItem('lang') || 'ru');
+  const file = (location.pathname.split('/').pop() || 'index.html');
+  const go = (lang)=>{
+    if(lang==='en') location.href = 'en/'+file;
+    else            location.href = file;
+  };
+  btns.forEach(b=> b.addEventListener('click', ()=> go(b.dataset.lang)));
+  document.querySelector('.langswitch [data-lang="ru"]').classList.add('active');
 </script>
 </body>
 </html>
