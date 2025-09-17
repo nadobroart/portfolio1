@@ -4,29 +4,33 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Анастасия — Интер-дизайнер / AI</title>
-<meta name="description" content="Интер-дизайнер, ИИ-креатор, промт-инженер. Видео-фон на всю страницу, вылетающие тексты и кадры.">
+<meta name="description" content="Интер-дизайнер, ИИ-креатор, промт-инженер. Видео-фон на всю страницу с плавной вертикальной панорамой при скролле.">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#000; --text:#e9eaec; --muted:#9da0a6; --edge:#171717;
+    --text:#e9eaec; --muted:#9da0a6; --edge:rgba(255,255,255,.08);
     --max:1300px; --radius:16px; --fade:600ms;
   }
   *{ box-sizing:border-box }
   html{ scroll-behavior:smooth }
   body{
-    margin:0; background:var(--bg); color:var(--text);
+    margin:0; color:var(--text);
     font-family: Inter, system-ui, -apple-system, Arial, sans-serif;
+    background:#000;  /* запасной фон */
   }
 
-  /* ===== ФОНОВОЕ ВИДЕО на всю страницу ===== */
+  /* ===== ФОНОВОЕ ВИДЕО (фикс), но видимая область СМЕНЯЕТСЯ при скролле ===== */
   #bgVideo{
     position:fixed; inset:0; width:100%; height:100%;
-    object-fit:cover; z-index:-2;
+    object-fit:cover;
+    /* object-position меняем скриптом: 50% var(--vpos) */
+    object-position: 50% 50%;
+    z-index:-2;
+    will-change: object-position, transform;
   }
-  /* Лёгкая затемняющая вуаль для читабельности */
   .bg-dim{
     position:fixed; inset:0; z-index:-1;
-    background:linear-gradient(180deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,.55) 40%, rgba(0,0,0,.65) 100%);
+    background:linear-gradient(180deg, rgba(0,0,0,.40) 0%, rgba(0,0,0,.55) 40%, rgba(0,0,0,.68) 100%);
     pointer-events:none;
   }
 
@@ -43,7 +47,7 @@
   }
   .minimenu a{ color:#cfcfd4; text-decoration:none }
 
-  /* RU/ENG (справа снизу) — только ссылки */
+  /* RU/ENG (справа снизу) */
   .langswitch{
     position:fixed; right:14px; bottom:14px; z-index:30;
     display:flex; gap:10px;
@@ -82,10 +86,8 @@
   }
   .subtitle.show{ opacity:1; transform:none }
 
-  /* ===== Кадры поверх видео ===== */
-  .album{
-    padding:20px 0 100px; position:relative;
-  }
+  /* ===== Кадры ===== */
+  .album{ padding:20px 0 100px; position:relative; }
   .album__head{
     display:flex; justify-content:space-between; align-items:center;
     padding:0 24px; max-width:var(--max); margin:0 auto 10px;
@@ -97,7 +99,7 @@
     display:grid; gap:28px;
   }
   .frame{
-    position:relative; border:1px solid rgba(255,255,255,.08);
+    position:relative; border:1px solid var(--edge);
     border-radius:var(--radius); overflow:hidden; background:rgba(0,0,0,.25);
     transform: translateY(60px); opacity:0;
     transition: transform .7s cubic-bezier(.2,.7,.2,1), opacity .7s ease, box-shadow .5s ease, background .3s ease;
@@ -112,19 +114,15 @@
     border-radius:8px; backdrop-filter: blur(3px)
   }
   .frame__desc{
-    display:none; padding:12px 14px; border-top:1px solid rgba(255,255,255,.08);
+    display:none; padding:12px 14px; border-top:1px solid var(--edge);
     background:rgba(0,0,0,.35);
     font-family: Raleway, Inter, system-ui, -apple-system, Arial, sans-serif;
     color:#dfe2e8; font-size:14px; line-height:1.5;
   }
   .frame.open .frame__desc{ display:block }
 
-  /* Низ страницы */
-  .foot{
-    padding:30px 24px; color:#c5c7cc; text-align:center; font-size:12px;
-  }
+  .foot{ padding:30px 24px; color:#c5c7cc; text-align:center; font-size:12px; }
 
-  /* Мелочи */
   .scroll-indicator{
     position:absolute; left:50%; bottom:24px; transform:translateX(-50%);
     color:var(--muted); font-size:12px; letter-spacing:.12em; opacity:.85
@@ -133,7 +131,7 @@
 </head>
 <body>
 
-<!-- ФОНОВОЕ ВИДЕО (на всю страницу) -->
+<!-- ФОНОВОЕ ВИДЕО (фикс), панорамируем object-position по скроллу -->
 <video id="bgVideo" autoplay muted loop playsinline>
   <source src="bg.mp4" type="video/mp4">
 </video>
@@ -156,7 +154,7 @@
     </h2>
   </section>
 
-  <!-- Кадры (вылетают по одному) -->
+  <!-- Кадры -->
   <section class="album" id="album">
     <div class="album__head"><span>КАДРЫ</span><span>листай вниз</span></div>
 
@@ -202,12 +200,11 @@
   <a href="index.html">главная</a>
 </nav>
 
-<!-- Выбор языка -->
+<!-- Язык -->
 <div class="langswitch" aria-label="Выбор языка">
   <a href="index.html" class="active">RU</a>/<a href="en/index.html">ENG</a>
 </div>
 
-<!-- Подвал -->
 <footer class="foot">
   <small>© <span id="year"></span> Анастасия</small>
 </footer>
@@ -218,10 +215,8 @@
 
   // Вторая надпись — показать при попадании в зону
   const subtitle = document.getElementById('subtitle');
-  const io1 = new IntersectionObserver((entries)=>{
-    entries.forEach(e => { if(e.isIntersecting) subtitle.classList.add('show'); });
-  }, {threshold:.35});
-  io1.observe(document.getElementById('sub'));
+  new IntersectionObserver((es)=>es.forEach(e=>{ if(e.isIntersecting) subtitle.classList.add('show'); }),{threshold:.35})
+    .observe(document.getElementById('sub'));
 
   // Кадры — "вылетают" по мере прокрутки
   const frames = [...document.querySelectorAll('.frame')];
@@ -230,21 +225,48 @@
   }, {threshold:.25});
   frames.forEach(f => io2.observe(f));
 
-  // Описание кадра — по клику открыть/закрыть
+  // Описание кадра — по клику
   frames.forEach(f=>{
-    const img = f.querySelector('img');
-    img.addEventListener('click', ()=> f.classList.toggle('open'));
+    f.querySelector('img')?.addEventListener('click', ()=> f.classList.toggle('open'));
   });
 
   // Год в подвале
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  // Подстраховка: если видео не подхватилось как <source>, можно назначить src программно
-  (function ensureVideo(){
-    const v = document.getElementById('bgVideo');
-    const hasSrc = v.currentSrc || (v.querySelector('source') && v.querySelector('source').src);
-    if (!hasSrc) v.src = 'bg.mp4';
-  })();
+  /* ===== ВЕРТИКАЛЬНАЯ ПАНОРАМА ВИДЕО ПО СКРОЛЛУ =====
+     - Стартуем чуть ВЫШЕ центра (например, 35%)
+     - Доезжаем примерно до 85%
+     - Прогресс считаем по всей странице (от 0 до 1)
+  */
+  const video = document.getElementById('bgVideo');
+  let ticking = false;
+
+  function setVideoPos(){
+    const doc = document.documentElement;
+    const max = (doc.scrollHeight - doc.clientHeight);
+    const sc  = Math.max(0, Math.min(max, window.scrollY || window.pageYOffset || 0));
+    const t   = max > 0 ? (sc / max) : 0; // 0..1
+
+    const start = 35; // % — старт выше центра
+    const end   = 85; // % — низ
+    const posY  = start + (end - start) * t; // линейная интерполяция
+
+    // ограничим безопасно
+    const y = Math.max(0, Math.min(100, posY));
+    video.style.objectPosition = `50% ${y}%`;
+    ticking = false;
+  }
+  window.addEventListener('scroll', ()=>{
+    if (!ticking) {
+      window.requestAnimationFrame(setVideoPos);
+      ticking = true;
+    }
+  }, {passive:true});
+  // первичная установка
+  setVideoPos();
+
+  // На очень высоких экранах (или маленькой странице) — подстрахуемся при ресайзе
+  window.addEventListener('resize', ()=>{ setVideoPos(); }, {passive:true});
 </script>
 </body>
 </html>
