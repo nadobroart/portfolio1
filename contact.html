@@ -11,25 +11,74 @@
   *{ box-sizing:border-box } html{ scroll-behavior:smooth }
   body{ margin:0; background:var(--bg); color:var(--text); font-family: Inter, system-ui, -apple-system, Arial, sans-serif; }
 
-  h2{ font-weight:800; letter-spacing:-.01em; font-size:clamp(22px,3.2vw,36px); margin:0; text-align:left; }
+  /* Заголовок по центру */
+  h2{
+    font-weight:800; letter-spacing:-.01em;
+    font-size:clamp(22px,3.2vw,36px); margin:0;
+    text-align:center;
+  }
 
-  .minimenu{ position:fixed; left:14px; bottom:14px; z-index:30; display:flex; flex-direction:column; gap:6px; font-size:12px; letter-spacing:.08em; background:rgba(0,0,0,.5); backdrop-filter:blur(6px); padding:8px 10px; border-radius:10px; border:1px solid #111; }
+  /* Мини-меню слева снизу */
+  .minimenu{
+    position:fixed; left:14px; bottom:14px; z-index:30;
+    display:flex; flex-direction:column; gap:6px;
+    font-size:12px; letter-spacing:.08em;
+    background:rgba(0,0,0,.5); backdrop-filter:blur(6px);
+    padding:8px 10px; border-radius:10px; border:1px solid #111;
+  }
   .minimenu a{ color:#cfcfd4; text-decoration:none }
 
-  .langswitch{ position:fixed; right:14px; bottom:14px; z-index:30; display:flex; gap:10px; font-size:12px; letter-spacing:.08em; background:rgba(0,0,0,.5); backdrop-filter:blur(6px); padding:8px 10px; border-radius:10px; border:1px solid #111; }
-  .langswitch a{ color:#cfcfd4; text-decoration:none; text-transform:uppercase }
-  .langswitch a.active{ color:#fff; text-decoration:underline; text-underline-offset:3px }
+  /* RU/ENG справа снизу */
+  .langswitch{
+    position:fixed; right:14px; bottom:14px; z-index:30;
+    display:flex; gap:10px;
+    font-size:12px; letter-spacing:.08em;
+    background:rgba(0,0,0,.5); backdrop-filter:blur(6px);
+    padding:8px 10px; border-radius:10px; border:1px solid #111;
+  }
+  .langswitch a{
+    color:#cfcfd4; text-decoration:none; text-transform:uppercase
+  }
+  .langswitch a.active{
+    color:#fff; text-decoration:underline; text-underline-offset:3px
+  }
 
+  /* Контент и отступы */
   .wrap{ padding:64px 24px 110px; max-width:900px; margin:0 auto; }
-  .contacts{ display:flex; flex-direction:column; align-items:center; gap:18px; margin-top:8vh }
-  .contact-row{ display:flex; align-items:center; gap:12px; font-family: Raleway, Inter, system-ui, -apple-system, Arial, sans-serif; }
+  .contacts{
+    display:flex; flex-direction:column; align-items:center; gap:18px;
+    margin-top:16vh; /* было 8vh — стало вдвое больше воздуха */
+  }
+
+  /* Ряд контакта + анимации наведения */
+  .contact-row{
+    display:flex; align-items:center; gap:12px;
+    font-family: Raleway, Inter, system-ui, -apple-system, Arial, sans-serif;
+  }
   .icon{ width:22px; height:22px; display:inline-block }
-  .handle a{ color:#e9eaec; text-decoration:none; font-weight:600; font-size:18px }
+  .icon svg{ transition: transform .2s ease, opacity .2s ease; will-change: transform; }
 
+  .handle a{
+    color:#e9eaec; text-decoration:none; font-weight:600; font-size:18px;
+    transition: transform .2s ease, opacity .2s ease, text-decoration-color .2s ease;
+    will-change: transform;
+    text-underline-offset:4px;
+  }
+  /* эффект “парения” */
+  .contact-row:hover .handle a{ transform:translateY(-2px); text-decoration:underline; opacity:1 }
+  .contact-row:hover .icon svg{ transform:translateY(-2px) }
+
+  /* Слоган по центру и ниже */
   .slogan-box{ margin-top:12vh; display:grid; place-items:center; text-align:center; }
-  .contact-slogan{ white-space:nowrap; font-weight:600; letter-spacing:.01em; color:#cfd1d6; font-family: Raleway, Inter, system-ui, -apple-system, Arial, sans-serif; }
+  .contact-slogan{
+    white-space:nowrap; font-weight:600; letter-spacing:.01em; color:#cfd1d6;
+    font-family: Raleway, Inter, system-ui, -apple-system, Arial, sans-serif;
+  }
 
-  .foot{ padding:30px 24px; border-top:1px solid var(--edge); color:#8c8d91; text-align:center; font-size:12px }
+  .foot{
+    padding:30px 24px; border-top:1px solid var(--edge);
+    color:#8c8d91; text-align:center; font-size:12px;
+  }
 </style>
 </head>
 <body>
@@ -38,6 +87,7 @@
   <h2>Контакты</h2>
 
   <div class="contacts">
+    <!-- Instagram @imnotdiller -->
     <div class="contact-row">
       <span class="icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
@@ -49,6 +99,7 @@
       <span class="handle"><a href="https://www.instagram.com/imnotdiller" target="_blank" rel="noopener">@imnotdiller</a></span>
     </div>
 
+    <!-- Instagram @nadobroart_neuro -->
     <div class="contact-row">
       <span class="icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
@@ -60,6 +111,7 @@
       <span class="handle"><a href="https://www.instagram.com/nadobroart_neuro" target="_blank" rel="noopener">@nadobroart_neuro</a></span>
     </div>
 
+    <!-- Telegram group -->
     <div class="contact-row">
       <span class="icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
@@ -69,6 +121,7 @@
       <span class="handle"><a href="https://t.me/nadobroart_neuro" target="_blank" rel="noopener">@nadobroart_neuro</a></span>
     </div>
 
+    <!-- Email -->
     <div class="contact-row">
       <span class="icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
@@ -85,11 +138,14 @@
   </div>
 </main>
 
+<!-- Мини-меню -->
 <nav class="minimenu" aria-label="Мини-меню">
   <a href="about.html">обо мне</a>
   <a href="contact.html">контакты</a>
   <a href="index.html">главная</a>
 </nav>
+
+<!-- Переключатель языка -->
 <div class="langswitch" aria-label="Выбор языка">
   <a href="contact.html" class="active">RU</a>/<a href="en/contact.html">ENG</a>
 </div>
