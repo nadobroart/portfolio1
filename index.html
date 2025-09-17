@@ -17,12 +17,12 @@
     padding:8px 10px; border-radius:10px; border:1px solid #111; }
   .minimenu a{ color:#cfcfd4; text-decoration:none }
 
-  /* RU/ENG справа снизу */
+  /* RU/ENG справа снизу — ТОЛЬКО ССЫЛКИ */
   .langswitch{ position:fixed; right:14px; bottom:14px; z-index:30; display:flex; gap:10px;
     font-size:12px; letter-spacing:.08em; background:rgba(0,0,0,.5); backdrop-filter:blur(6px);
     padding:8px 10px; border-radius:10px; border:1px solid #111; }
-  .langswitch button{ appearance:none; background:transparent; border:none; color:#cfcfd4; cursor:pointer; padding:0 2px; font:inherit; opacity:.8; text-transform:uppercase }
-  .langswitch button.active{ opacity:1; color:#fff; text-decoration:underline; text-underline-offset:3px }
+  .langswitch a{ color:#cfcfd4; text-decoration:none; text-transform:uppercase }
+  .langswitch a.active{ color:#fff; text-decoration:underline; text-underline-offset:3px }
 
   /* HERO */
   .hero{position:relative; height:100vh; overflow:hidden}
@@ -36,7 +36,7 @@
   .hero.loaded .hero__title{opacity:1; transform:none}
   .scroll-indicator{position:absolute; left:50%; bottom:24px; transform:translateX(-50%); color:var(--muted); font-size:12px; letter-spacing:.12em; opacity:.8}
 
-  /* 2-я надпись (Raleway, по центру, вылет снизу) */
+  /* 2-я надпись (Raleway) */
   .intro{min-height:60vh; display:grid; place-items:center; padding:12vh 24px 16vh}
   .intro__text{ 
     text-align:center; max-width:1100px; line-height:1.2; font-weight:800; font-size:clamp(18px,3.2vw,40px);
@@ -45,7 +45,7 @@
   }
   .intro.show .intro__text{opacity:1; transform:none}
 
-  /* Работы — «вылет» снизу по одной; описания по клику (Raleway) */
+  /* Работы */
   .album{border-top:1px solid var(--edge); padding:20px 0 80px; position:relative; z-index:2}
   .album__head{display:flex; justify-content:space-between; align-items:center;
     padding:0 24px; max-width:var(--max); margin:0 auto 10px; color:var(--muted); font-size:12px; letter-spacing:.1em}
@@ -89,26 +89,11 @@
 <section class="album" id="album">
   <div class="album__head"><span>КАДРЫ</span><span>листай вниз</span></div>
   <div class="frames" id="frames">
-    <figure class="frame">
-      <img class="f" src="frame1.jpg" alt="Кадр 1"><figcaption class="cap">Сцена 1</figcaption>
-      <div class="frame__desc">Описание кадра 1 — идея, техника, контекст.</div>
-    </figure>
-    <figure class="frame">
-      <img class="f" src="frame2.jpg" alt="Кадр 2"><figcaption class="cap">Сцена 2</figcaption>
-      <div class="frame__desc">Описание кадра 2.</div>
-    </figure>
-    <figure class="frame">
-      <img class="f" src="frame3.jpg" alt="Кадр 3"><figcaption class="cap">Сцена 3</figcaption>
-      <div class="frame__desc">Описание кадра 3.</div>
-    </figure>
-    <figure class="frame">
-      <img class="f" src="frame4.jpg" alt="Кадр 4"><figcaption class="cap">Сцена 4</figcaption>
-      <div class="frame__desc">Описание кадра 4.</div>
-    </figure>
-    <figure class="frame">
-      <img class="f" src="frame5.jpg" alt="Кадр 5"><figcaption class="cap">Сцена 5</figcaption>
-      <div class="frame__desc">Описание кадра 5.</div>
-    </figure>
+    <figure class="frame"><img src="frame1.jpg" alt="Кадр 1"><figcaption class="cap">Сцена 1</figcaption><div class="frame__desc">Описание кадра 1.</div></figure>
+    <figure class="frame"><img src="frame2.jpg" alt="Кадр 2"><figcaption class="cap">Сцена 2</figcaption><div class="frame__desc">Описание кадра 2.</div></figure>
+    <figure class="frame"><img src="frame3.jpg" alt="Кадр 3"><figcaption class="cap">Сцена 3</figcaption><div class="frame__desc">Описание кадра 3.</div></figure>
+    <figure class="frame"><img src="frame4.jpg" alt="Кадр 4"><figcaption class="cap">Сцена 4</figcaption><div class="frame__desc">Описание кадра 4.</div></figure>
+    <figure class="frame"><img src="frame5.jpg" alt="Кадр 5"><figcaption class="cap">Сцена 5</figcaption><div class="frame__desc">Описание кадра 5.</div></figure>
   </div>
 </section>
 
@@ -118,7 +103,7 @@
   <a href="index.html">главная</a>
 </nav>
 <div class="langswitch" aria-label="Выбор языка">
-  <button type="button" data-lang="ru" class="active">RU</button>/<button type="button" data-lang="en">ENG</button>
+  <a href="index.html" class="active">RU</a>/<a href="en/index.html">ENG</a>
 </div>
 
 <footer class="foot">
@@ -132,25 +117,16 @@
   if (bg) { bg.oncanplay = showHeroTitle; setTimeout(showHeroTitle, 800); }
 
   const intro = document.getElementById('intro');
-  const io = new IntersectionObserver((es)=>{ es.forEach(e=>{ intro.classList.toggle('show', e.isIntersecting); }); }, {threshold:.35});
-  io.observe(intro);
+  new IntersectionObserver(es=>es.forEach(e=>intro.classList.toggle('show',e.isIntersecting)),{threshold:.35}).observe(intro);
 
   const album = document.getElementById('album');
-  const io2 = new IntersectionObserver((es)=>{ es.forEach(e=>{ hero.classList.toggle('wipe', e.isIntersecting); }); }, {threshold:.15});
-  io2.observe(album);
+  new IntersectionObserver(es=>es.forEach(e=>hero.classList.toggle('wipe',e.isIntersecting)),{threshold:.15}).observe(album);
 
-  const frames = [...document.querySelectorAll('.frame')];
-  const io3 = new IntersectionObserver((es)=>{ es.forEach(e=>{ e.target.classList.toggle('appear', e.isIntersecting); }); }, {threshold:.25});
-  frames.forEach(f => { io3.observe(f); f.querySelector('img')?.addEventListener('click', ()=> f.classList.toggle('open')); });
+  const frames=[...document.querySelectorAll('.frame')];
+  const io3=new IntersectionObserver(es=>{es.forEach(e=>e.target.classList.toggle('appear',e.isIntersecting));},{threshold:.25});
+  frames.forEach(f=>{io3.observe(f); f.querySelector('img')?.addEventListener('click',()=>f.classList.toggle('open'));});
 
   document.getElementById('year').textContent = new Date().getFullYear();
-
-  // RU/ENG UI (плейсхолдер)
-  const btns = document.querySelectorAll('.langswitch [data-lang]');
-  const saveLang = (l)=> localStorage.setItem('lang', l);
-  const applyLang = (l)=>{ btns.forEach(b=> b.classList.toggle('active', b.dataset.lang===l)); document.documentElement.setAttribute('lang', l); };
-  btns.forEach(b=> b.addEventListener('click', ()=>{ saveLang(b.dataset.lang); applyLang(b.dataset.lang); }));
-  applyLang(localStorage.getItem('lang') || 'ru');
 </script>
 </body>
 </html>
