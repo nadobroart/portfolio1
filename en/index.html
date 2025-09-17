@@ -4,17 +4,19 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Anastasia — Inter-designer / AI</title>
-<meta name="description" content="Inter-designer, AI content creator, prompt engineer. Cinematic homepage with video background and staged frames.">
+<meta name="description" content="Inter-designer, AI content creator, prompt-engineer. Video background, staged frames.">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{ --bg:#000; --text:#e9eaec; --muted:#9da0a6; --edge:#171717; --max:1300px; --radius:16px; --fade:600ms; }
   *{box-sizing:border-box} html{scroll-behavior:smooth}
   body{margin:0; background:var(--bg); color:var(--text); font-family:Inter, system-ui, -apple-system, Arial, sans-serif}
+
   .minimenu{ position:fixed; left:14px; bottom:14px; z-index:30; display:flex; flex-direction:column; gap:6px; font-size:12px; letter-spacing:.08em; background:rgba(0,0,0,.5); backdrop-filter:blur(6px); padding:8px 10px; border-radius:10px; border:1px solid #111; }
   .minimenu a{ color:#cfcfd4; text-decoration:none }
+
   .langswitch{ position:fixed; right:14px; bottom:14px; z-index:30; display:flex; gap:10px; font-size:12px; letter-spacing:.08em; background:rgba(0,0,0,.5); backdrop-filter:blur(6px); padding:8px 10px; border-radius:10px; border:1px solid #111; }
-  .langswitch button{ appearance:none; background:transparent; border:none; color:#cfcfd4; cursor:pointer; padding:0 2px; font:inherit; opacity:.8; text-transform:uppercase }
-  .langswitch button.active{ opacity:1; color:#fff; text-decoration:underline; text-underline-offset:3px }
+  .langswitch a{ color:#cfcfd4; text-decoration:none; text-transform:uppercase }
+  .langswitch a.active{ color:#fff; text-decoration:underline; text-underline-offset:3px }
 
   .hero{position:relative; height:100vh; overflow:hidden}
   .hero video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:brightness(.5) contrast(1.05); transition:transform .9s ease, opacity .9s ease; }
@@ -26,13 +28,15 @@
   .scroll-indicator{position:absolute; left:50%; bottom:24px; transform:translateX(-50%); color:var(--muted); font-size:12px; letter-spacing:.12em; opacity:.8}
 
   .intro{min-height:60vh; display:grid; place-items:center; padding:12vh 24px 16vh}
-  .intro__text{ text-align:center; max-width:1100px; line-height:1.2; font-weight:800; font-size:clamp(18px,3.2vw,40px); opacity:0; transform:translateY(40px); transition:opacity var(--fade) cubic-bezier(.2,.7,.2,1), transform var(--fade) cubic-bezier(.2,.7,.2,1); font-family: Raleway, Inter, system-ui, -apple-system, Arial, sans-serif; }
+  .intro__text{ text-align:center; max-width:1100px; line-height:1.2; font-weight:800; font-size:clamp(18px,3.2vw,40px);
+    opacity:0; transform:translateY(40px); transition:opacity var(--fade) cubic-bezier(.2,.7,.2,1), transform var(--fade) cubic-bezier(.2,.7,.2,1);
+    font-family: Raleway, Inter, system-ui, -apple-system, Arial, sans-serif; }
   .intro.show .intro__text{opacity:1; transform:none}
 
-  .album{border-top:1px solid #171717; padding:20px 0 80px; position:relative; z-index:2}
+  .album{border-top:1px solid var(--edge); padding:20px 0 80px; position:relative; z-index:2}
   .album__head{display:flex; justify-content:space-between; align-items:center; padding:0 24px; max-width:var(--max); margin:0 auto 10px; color:var(--muted); font-size:12px; letter-spacing:.1em}
   .frames{position:relative; max-width:var(--max); margin:0 auto; padding:0 24px; display:grid; gap:28px}
-  .frame{ position:relative; border:1px solid #171717; border-radius:var(--radius); overflow:hidden; background:#0b0b0b; transform: translateY(60px); opacity:0; transition: transform .7s cubic-bezier(.2,.7,.2,1), opacity .7s ease, box-shadow .5s ease; }
+  .frame{ position:relative; border:1px solid var(--edge); border-radius:var(--radius); overflow:hidden; background:#0b0b0b; transform: translateY(60px); opacity:0; transition: transform .7s cubic-bezier(.2,.7,.2,1), opacity .7s ease, box-shadow .5s ease; }
   .frame.appear{ transform:translateY(0); opacity:1 }
   .frame img{display:block; width:100%; height:auto; object-fit:contain; background:#000; cursor:pointer}
   .frame .cap{position:absolute; left:14px; bottom:12px; padding:6px 10px; font-size:12px; color:#d7d9dd; background:rgba(0,0,0,.35); border-radius:8px; backdrop-filter: blur(3px)}
@@ -44,6 +48,7 @@
 </style>
 </head>
 <body>
+
 <section class="hero" id="hero">
   <video id="bg" autoplay muted loop playsinline><source src="../bg.mp4" type="video/mp4"></video>
   <div class="hero__overlay" aria-hidden="true"></div>
@@ -53,15 +58,14 @@
 
 <section class="intro" id="intro">
   <div class="intro__text">
-    Anastasia — AI content creator, prompt-engineer<br />
-    and multidisciplinary designer
+    Anastasia — AI content creator, prompt-engineer<br />and multidisciplinary designer
   </div>
 </section>
 
 <section class="album" id="album">
   <div class="album__head"><span>FRAMES</span><span>scroll down</span></div>
   <div class="frames" id="frames">
-    <figure class="frame"><img src="../frame1.jpg" alt="Frame 1"><figcaption class="cap">Scene 1</figcaption><div class="frame__desc">Frame 1 description — idea, technique, context.</div></figure>
+    <figure class="frame"><img src="../frame1.jpg" alt="Frame 1"><figcaption class="cap">Scene 1</figcaption><div class="frame__desc">Frame 1 description.</div></figure>
     <figure class="frame"><img src="../frame2.jpg" alt="Frame 2"><figcaption class="cap">Scene 2</figcaption><div class="frame__desc">Frame 2 description.</div></figure>
     <figure class="frame"><img src="../frame3.jpg" alt="Frame 3"><figcaption class="cap">Scene 3</figcaption><div class="frame__desc">Frame 3 description.</div></figure>
     <figure class="frame"><img src="../frame4.jpg" alt="Frame 4"><figcaption class="cap">Scene 4</figcaption><div class="frame__desc">Frame 4 description.</div></figure>
@@ -75,7 +79,7 @@
   <a href="index.html">home</a>
 </nav>
 <div class="langswitch" aria-label="Language">
-  <button type="button" data-lang="ru">RU</button>/<button type="button" data-lang="en" class="active">ENG</button>
+  <a href="../index.html">RU</a>/<a href="index.html" class="active">ENG</a>
 </div>
 
 <footer class="foot"><small>© <span id="year"></span> Anastasia</small></footer>
@@ -87,10 +91,6 @@
   const album=document.getElementById('album'); new IntersectionObserver(es=>es.forEach(e=>hero.classList.toggle('wipe',e.isIntersecting)),{threshold:.15}).observe(album);
   const frames=[...document.querySelectorAll('.frame')]; const io3=new IntersectionObserver(es=>{es.forEach(e=>e.target.classList.toggle('appear',e.isIntersecting));},{threshold:.25}); frames.forEach(f=>{io3.observe(f); f.querySelector('img')?.addEventListener('click',()=>f.classList.toggle('open'));});
   document.getElementById('year').textContent=new Date().getFullYear();
-  // RU/ENG as links
-  const btns=document.querySelectorAll('.langswitch [data-lang]'); const file=(location.pathname.split('/').pop()||'index.html');
-  const go=(lang)=>{ if(lang==='ru') location.href='../'+file; else location.href=file; };
-  btns.forEach(b=>b.addEventListener('click',()=>go(b.dataset.lang)));
 </script>
 </body>
 </html>
