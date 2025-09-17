@@ -4,17 +4,11 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Обо мне — Анастасия</title>
-<meta name="description" content="Обо мне: портрет, путь, выставки и NFT-альбом.">
+<meta name="description" content="Портрет, путь, выставки и NFT-альбом.">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#000; --text:#e9eaec; --muted:#9da0a6; --edge:#171717;
-    --max:1300px; --radius:14px;
-    --grid-gap:72px;              /* расстояние между колонками */
-    --title-space:22px;           /* базовый отступ под h2 */
-  }
-  *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
+  :root{ --bg:#000; --text:#e9eaec; --muted:#9da0a6; --edge:#171717; --max:1300px; --radius:14px; --grid-gap:72px; --title-space:22px; }
+  *{box-sizing:border-box} html{scroll-behavior:smooth}
   body{margin:0; background:var(--bg); color:var(--text); font-family:Inter, system-ui, -apple-system, Arial, sans-serif}
 
   /* Заголовки — Inter; основной текст — Raleway */
@@ -23,37 +17,21 @@
   .bodytext p, .bodytext li{ color:#d8dbe1; line-height:1.6; }
   .bodytext p + p{ margin-top:14px; }
 
-  /* мини-меню и RU/ENG */
-  .minimenu{ position:fixed; left:14px; bottom:14px; z-index:30; display:flex; flex-direction:column; gap:6px;
-    font-size:12px; letter-spacing:.08em; background:rgba(0,0,0,.5); backdrop-filter:blur(6px);
-    padding:8px 10px; border-radius:10px; border:1px solid #111; }
+  .minimenu{ position:fixed; left:14px; bottom:14px; z-index:30; display:flex; flex-direction:column; gap:6px; font-size:12px; letter-spacing:.08em; background:rgba(0,0,0,.5); backdrop-filter:blur(6px); padding:8px 10px; border-radius:10px; border:1px solid #111; }
   .minimenu a{ color:#cfcfd4; text-decoration:none }
-  .langswitch{ position:fixed; right:14px; bottom:14px; z-index:30; display:flex; gap:10px;
-    font-size:12px; letter-spacing:.08em; background:rgba(0,0,0,.5); backdrop-filter:blur(6px);
-    padding:8px 10px; border-radius:10px; border:1px solid #111; }
-  .langswitch button{ appearance:none; background:transparent; border:none; color:#cfcfd4; cursor:pointer; padding:0 2px; font:inherit; opacity:.8; text-transform:uppercase }
-  .langswitch button.active{ opacity:1; color:#fff; text-decoration:underline; text-underline-offset:3px }
 
-  /* контейнер: по твоим красным направляющим — 2 ровные колонки 50/50 */
+  .langswitch{ position:fixed; right:14px; bottom:14px; z-index:30; display:flex; gap:10px; font-size:12px; letter-spacing:.08em; background:rgba(0,0,0,.5); backdrop-filter:blur(6px); padding:8px 10px; border-radius:10px; border:1px solid #111; }
+  .langswitch a{ color:#cfcfd4; text-decoration:none; text-transform:uppercase }
+  .langswitch a.active{ color:#fff; text-decoration:underline; text-underline-offset:3px }
+
   .wrap{ padding:64px 48px 110px 72px; max-width:var(--max); margin:0 auto; }
-  .row, .row-bottom{
-    display:grid; grid-template-columns:1fr 1fr; column-gap:var(--grid-gap); align-items:start;
-  }
+  .row, .row-bottom{ display:grid; grid-template-columns:1fr 1fr; column-gap:var(--grid-gap); align-items:start; }
 
-  /* левый блок = фото 3:4, правый = текст; одинаковый отступ сверху */
-  .photo{
-    width:100%; aspect-ratio:3/4; object-fit:cover;
-    background:#0b0b0b; border:1px solid var(--edge); border-radius:12px;
-  }
+  .photo{ width:100%; aspect-ratio:3/4; object-fit:cover; background:#0b0b0b; border:1px solid var(--edge); border-radius:12px; }
   .right-col p, .right-col ul{ max-width:62ch }
 
-  /* нижний ряд: слева «стопка» превью — выровнена по тем же границам и по ширине равна фото */
   .stack{ position:relative; width:100%; aspect-ratio:3/4; }
-  .card{
-    position:absolute; top:0; left:0; width:78%; aspect-ratio:4/3;
-    border:1px solid var(--edge); border-radius:12px; overflow:hidden; background:#0b0b0b;
-    box-shadow:0 20px 60px rgba(0,0,0,.35); cursor:pointer;
-  }
+  .card{ position:absolute; top:0; left:0; width:78%; aspect-ratio:4/3; border:1px solid var(--edge); border-radius:12px; overflow:hidden; background:#0b0b0b; box-shadow:0 20px 60px rgba(0,0,0,.35); cursor:pointer }
   .card img{width:100%; height:100%; object-fit:cover; display:block; transition:transform .35s ease}
   .card:nth-child(1){ transform:rotate(-6deg) translate(-8px, 8px); z-index:1}
   .card:nth-child(2){ transform:rotate(2deg)  translate(14px, 14px); z-index:2}
@@ -73,15 +51,11 @@
   .lightbox.open{ display:grid }
   .lb-inner{ position:relative; width:min(92vw,1200px) }
   .lb-img{ width:100%; background:#111; border:1px solid #1a1a1a; border-radius:14px; object-fit:contain; cursor:pointer }
-  .lb-title{ margin-top:10px; text-align:center; font-weight:800; letter-spacing:.005em }     /* Inter */
-  .lb-meta{ text-align:center; color:#cfd1d6; font-size:14px }                               /* Inter */
+  .lb-title{ margin-top:10px; text-align:center; font-weight:800; letter-spacing:.005em }  /* Inter */
+  .lb-meta{ text-align:center; color:#cfd1d6; font-size:14px }                            /* Inter */
   .lb-desc{ display:none; margin-top:8px; text-align:center; font-family: Raleway, Inter, system-ui, -apple-system, Arial, sans-serif; color:#d8dbe1; line-height:1.55 }
   .lb-desc.show{ display:block }
-  .lb-prev,.lb-next,.lb-close{
-    position:absolute; top:50%; transform:translateY(-50%);
-    background:rgba(0,0,0,.4); color:#fff; border:1px solid #2a2a2a;
-    padding:10px 12px; border-radius:10px; cursor:pointer;
-  }
+  .lb-prev,.lb-next,.lb-close{ position:absolute; top:50%; transform:translateY(-50%); background:rgba(0,0,0,.4); color:#fff; border:1px solid #2a2a2a; padding:10px 12px; border-radius:10px; cursor:pointer; }
   .lb-prev{left:-6px} .lb-next{right:-6px}
   .lb-close{ top:-46px; right:0; transform:none }
   .lb-hint{ position:absolute; bottom:-32px; left:50%; transform:translateX(-50%); color:#8f9096; font-size:12px }
@@ -92,13 +66,12 @@
 <body>
 
 <main class="wrap">
-  <!-- верхняя строка -->
   <section class="row">
     <img class="photo" src="portrait.jpg" alt="Портрет Анастасии">
     <div class="right-col bodytext">
       <h2>Обо мне</h2>
 
-      <p>Здравствуйте, я Анастасия, мне 26 лет. Имею высшее образование, Бакалавр факультета Архитектуры и Дизайна. За спиной у меня объемный художественный бэкграунд и сейчас Я создаю визуальные истории с помощью ИИ и привычных графических инструментов, соединяя эстетику, технологии и атмосферу.</p>
+      <p>Здравствуйте, я Анастасия, мне 26 лет. Имею высшее образование, Бакалавр на факультете Архитектуры и Дизайна. За спиной у меня объемный художественный бэкграунд и сейчас Я создаю визуальные истории с помощью ИИ и привычных графических инструментов, соединяя эстетику, технологии и атмосферу.</p>
 
       <p>Мой путь начался с классического дизайна и digital-арта, благодаря NFT я нашла свой стиль, нашла и приняла себя, и этот мир ответил мне взаимностью. Не раз я выставлялась в разных странах и городах: в Москве, Дубае, Нью-Йорке, Японии, Испании, Индонезии.</p>
 
@@ -108,7 +81,6 @@
     </div>
   </section>
 
-  <!-- нижняя строка -->
   <section class="row-bottom" style="margin-top:64px">
     <div>
       <div class="stack" id="stack">
@@ -136,7 +108,7 @@
   <a href="index.html">главная</a>
 </nav>
 <div class="langswitch" aria-label="Выбор языка">
-  <button type="button" data-lang="ru" class="active">RU</button>/<button type="button" data-lang="en">ENG</button>
+  <a href="about.html" class="active">RU</a>/<a href="en/about.html">ENG</a>
 </div>
 
 <!-- Лайтбокс -->
@@ -162,7 +134,7 @@
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  /* ===== Альбом: открытие по НАВЕДЕНИЮ, закрытие по крестику/фону/Esc ===== */
+  /* ===== Альбом: моментально при наведении, закрытие по крестику/фону/Esc ===== */
   const gallery = [
     {src:'nft1.jpg', title:'Серия «Хром»,', city:'Дубай', year:'2023', desc:'Исследование отражающих поверхностей и неонового света в контексте урбан-мифологии.'},
     {src:'nft2.jpg', title:'«Ветер внутри»,', city:'Токио', year:'2024', desc:'Гибридные портреты: смешение AI-рендеров и ручной пост-обработки.'},
@@ -179,7 +151,6 @@
   const lbInner = lb.querySelector('.lb-inner');
   const lbImg = document.getElementById('lbImg');
   const lbTitle = document.getElementById('lbTitle');
-  const lbMeta = document.getElementById('lbMeta');
   const lbDesc = document.getElementById('lbDesc');
   const lbPrev = document.getElementById('lbPrev');
   const lbNext = document.getElementById('lbNext');
@@ -190,16 +161,15 @@
     const g = gallery[gi];
     lbImg.src = g.src;
     lbTitle.textContent = `${g.title} ${g.city} — ${g.year}`;
-    lbMeta.textContent  = '';
-    lbDesc.textContent  = g.desc || '';
+    lbDesc.textContent = g.desc || '';
     lbDesc.classList.remove('show');
   }
-  function openLB(i=0){ gi = i; renderLB(); lb.classList.add('open'); }
+  function openLB(i=0){ gi=i; renderLB(); lb.classList.add('open'); }
   function closeLB(){ lb.classList.remove('open'); }
   function prevLB(e){ gi=(gi-1+gallery.length)%gallery.length; renderLB(); if(e) e.stopPropagation(); }
   function nextLB(e){ gi=(gi+1)%gallery.length; renderLB(); if(e) e.stopPropagation(); }
 
-  // ОТКРЫТИЕ ПО НАВЕДЕНИЮ (desktop). Без задержек, без автозакрытия на mouseleave.
+  // Открытие СРАЗУ при наведении (desktop)
   const prefersHover = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
   if (prefersHover) {
     stack.addEventListener('mousemove', (e)=>{
@@ -207,36 +177,24 @@
       const idx  = Number(card.dataset.idx||0);
       if (!lb.classList.contains('open') || gi!==idx){ openLB(idx); }
     }, true);
+  } else {
+    // На телефоне — по клику
+    stack.addEventListener('click', (e)=>{
+      const card = e.target.closest('.card'); if(!card) return;
+      openLB(Number(card.dataset.idx||0));
+    });
   }
-  // Fallback для тача — по клику
-  stack.addEventListener('click', (e)=>{
-    if (prefersHover) return;
-    const card = e.target.closest('.card'); if(!card) return;
-    openLB(Number(card.dataset.idx||0));
-  });
 
-  // Показ/скрытие описания — клик по большому изображению
+  // Показ описания
   lbImg.addEventListener('click', ()=> lbDesc.classList.toggle('show'));
 
-  // Управление и закрытие
+  // Управление/закрытие
   lbPrev.addEventListener('click', prevLB);
   lbNext.addEventListener('click', nextLB);
   lbClose.addEventListener('click', (e)=>{ e.stopPropagation(); closeLB(); });
   lb.addEventListener('click', (e)=>{ if(e.target === lb) closeLB(); });
-  lb.addEventListener('dblclick', closeLB);
   document.addEventListener('keydown', (e)=>{ if(lb.classList.contains('open') && e.key==='Escape') closeLB(); });
   lbInner.addEventListener('click', (e)=> e.stopPropagation());
-
-  /* ===== Переключатель RU/ENG как ссылки между страницами ===== */
-  const btns = document.querySelectorAll('.langswitch [data-lang]');
-  const file = (location.pathname.split('/').pop() || 'index.html');
-  const go = (lang)=>{
-    if(lang==='en') location.href = 'en/'+file;
-    else            location.href = file;
-  };
-  btns.forEach(b=> b.addEventListener('click', ()=> go(b.dataset.lang)));
-  document.querySelector('.langswitch [data-lang="ru"]').classList.add('active');
 </script>
 </body>
 </html>
-<!-- bump -->
