@@ -3,151 +3,128 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Контакты — Анастасия</title>
-<meta name="description" content="Контакты: Instagram, Telegram, Email.">
+<title>Обо мне — Анастасия</title>
+<meta name="description" content="Портрет, путь, выставки и NFT-альбом.">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{ --bg:#000; --text:#e9eaec; --muted:#9da0a6; --edge:#171717; }
-  *{ box-sizing:border-box } html{ scroll-behavior:smooth }
-  body{ margin:0; background:var(--bg); color:var(--text); font-family: Inter, system-ui, -apple-system, Arial, sans-serif; }
+  :root{ --bg:#000; --text:#e9eaec; --muted:#9da0a6; --edge:#171717; --max:1300px; --radius:14px; --grid-gap:72px; --title-space:22px; }
+  *{box-sizing:border-box} html{scroll-behavior:smooth}
+  body{margin:0; background:var(--bg); color:var(--text); font-family:Inter, system-ui, -apple-system, Arial, sans-serif}
 
-  /* Заголовок по центру */
-  h2{
-    font-weight:800; letter-spacing:-.01em;
-    font-size:clamp(22px,3.2vw,36px); margin:0;
-    text-align:center;
-  }
+  /* Заголовки — Inter; основной текст — Raleway */
+  h2{font-weight:800; letter-spacing:-.01em; font-size:clamp(22px,3.2vw,36px); margin:0 0 calc(var(--title-space)*2)}
+  .bodytext{ font-family: Raleway, Inter, system-ui, -apple-system, Arial, sans-serif; }
+  .bodytext p, .bodytext li{ color:#d8dbe1; line-height:1.6; }
+  .bodytext p + p{ margin-top:14px; }
 
-  /* Мини-меню слева снизу */
-  .minimenu{
-    position:fixed; left:14px; bottom:14px; z-index:30;
-    display:flex; flex-direction:column; gap:6px;
-    font-size:12px; letter-spacing:.08em;
-    background:rgba(0,0,0,.5); backdrop-filter:blur(6px);
-    padding:8px 10px; border-radius:10px; border:1px solid #111;
-  }
+  .minimenu{ position:fixed; left:14px; bottom:14px; z-index:30; display:flex; flex-direction:column; gap:6px; font-size:12px; letter-spacing:.08em; background:rgba(0,0,0,.5); backdrop-filter:blur(6px); padding:8px 10px; border-radius:10px; border:1px solid #111; }
   .minimenu a{ color:#cfcfd4; text-decoration:none }
 
-  /* RU/ENG справа снизу */
-  .langswitch{
-    position:fixed; right:14px; bottom:14px; z-index:30;
-    display:flex; gap:10px;
-    font-size:12px; letter-spacing:.08em;
-    background:rgba(0,0,0,.5); backdrop-filter:blur(6px);
-    padding:8px 10px; border-radius:10px; border:1px solid #111;
-  }
-  .langswitch a{
-    color:#cfcfd4; text-decoration:none; text-transform:uppercase
-  }
-  .langswitch a.active{
-    color:#fff; text-decoration:underline; text-underline-offset:3px
+  .langswitch{ position:fixed; right:14px; bottom:14px; z-index:30; display:flex; gap:10px; font-size:12px; letter-spacing:.08em; background:rgba(0,0,0,.5); backdrop-filter:blur(6px); padding:8px 10px; border-radius:10px; border:1px solid #111; }
+  .langswitch a{ color:#cfcfd4; text-decoration:none; text-transform:uppercase }
+  .langswitch a.active{ color:#fff; text-decoration:underline; text-underline-offset:3px }
+
+  .wrap{ padding:64px 48px 110px 72px; max-width:var(--max); margin:0 auto; }
+  .row, .row-bottom{ display:grid; grid-template-columns:1fr 1fr; column-gap:var(--grid-gap); align-items:start; }
+
+  .photo{ width:100%; aspect-ratio:3/4; object-fit:cover; background:#0b0b0b; border:1px solid var(--edge); border-radius:12px; }
+  .right-col p, .right-col ul{ max-width:62ch }
+
+  .stack{ position:relative; width:100%; aspect-ratio:3/4; }
+  .card{ position:absolute; top:0; left:0; width:78%; aspect-ratio:4/3; border:1px solid var(--edge); border-radius:12px; overflow:hidden; background:#0b0b0b; box-shadow:0 20px 60px rgba(0,0,0,.35); cursor:pointer }
+  .card img{width:100%; height:100%; object-fit:cover; display:block; transition:transform .35s ease}
+  .card:nth-child(1){ transform:rotate(-6deg) translate(-8px, 8px); z-index:1}
+  .card:nth-child(2){ transform:rotate(2deg)  translate(14px, 14px); z-index:2}
+  .card:nth-child(3){ transform:rotate(8deg)  translate(32px, 24px); z-index:3}
+  .stack:hover .card img{ transform:scale(1.04) }
+  .stack-note{ margin-top:10px; font-size:12px; color:#9aa0a6 }
+
+  @media (max-width:980px){
+    .wrap{ padding:32px 18px 90px 18px }
+    .row, .row-bottom{ grid-template-columns:1fr; column-gap:0 }
+    .stack{ position:static; width:100%; aspect-ratio:auto }
+    .card{ position:relative; width:100%; transform:none; aspect-ratio:4/3 }
   }
 
-  /* Контент и отступы */
-  .wrap{ padding:64px 24px 110px; max-width:900px; margin:0 auto; }
-  .contacts{
-    display:flex; flex-direction:column; align-items:center; gap:18px;
-    margin-top:16vh; /* было 8vh — стало вдвое больше воздуха */
-  }
+  /* Лайтбокс */
+  .lightbox{ position:fixed; inset:0; display:none; place-items:center; background:rgba(0,0,0,.86); z-index:100 }
+  .lightbox.open{ display:grid }
+  .lb-inner{ position:relative; width:min(92vw,1200px) }
+  .lb-img{ width:100%; background:#111; border:1px solid #1a1a1a; border-radius:14px; object-fit:contain; cursor:pointer }
+  .lb-title{ margin-top:10px; text-align:center; font-weight:800; letter-spacing:.005em }  /* Inter */
+  .lb-meta{ text-align:center; color:#cfd1d6; font-size:14px }                            /* Inter */
+  .lb-desc{ display:none; margin-top:8px; text-align:center; font-family: Raleway, Inter, system-ui, -apple-system, Arial, sans-serif; color:#d8dbe1; line-height:1.55 }
+  .lb-desc.show{ display:block }
+  .lb-prev,.lb-next,.lb-close{ position:absolute; top:50%; transform:translateY(-50%); background:rgba(0,0,0,.4); color:#fff; border:1px solid #2a2a2a; padding:10px 12px; border-radius:10px; cursor:pointer; }
+  .lb-prev{left:-6px} .lb-next{right:-6px}
+  .lb-close{ top:-46px; right:0; transform:none }
+  .lb-hint{ position:absolute; bottom:-32px; left:50%; transform:translateX(-50%); color:#8f9096; font-size:12px }
 
-  /* Ряд контакта + анимации наведения */
-  .contact-row{
-    display:flex; align-items:center; gap:12px;
-    font-family: Raleway, Inter, system-ui, -apple-system, Arial, sans-serif;
-  }
-  .icon{ width:22px; height:22px; display:inline-block }
-  .icon svg{ transition: transform .2s ease, opacity .2s ease; will-change: transform; }
-
-  .handle a{
-    color:#e9eaec; text-decoration:none; font-weight:600; font-size:18px;
-    transition: transform .2s ease, opacity .2s ease, text-decoration-color .2s ease;
-    will-change: transform;
-    text-underline-offset:4px;
-  }
-  /* эффект “парения” */
-  .contact-row:hover .handle a{ transform:translateY(-2px); text-decoration:underline; opacity:1 }
-  .contact-row:hover .icon svg{ transform:translateY(-2px) }
-
-  /* Слоган по центру и ниже */
-  .slogan-box{ margin-top:12vh; display:grid; place-items:center; text-align:center; }
-  .contact-slogan{
-    white-space:nowrap; font-weight:600; letter-spacing:.01em; color:#cfd1d6;
-    font-family: Raleway, Inter, system-ui, -apple-system, Arial, sans-serif;
-  }
-
-  .foot{
-    padding:30px 24px; border-top:1px solid var(--edge);
-    color:#8c8d91; text-align:center; font-size:12px;
-  }
+  .foot{ padding:30px 24px; border-top:1px solid var(--edge); color:#8c8d91; text-align:center; font-size:12px }
 </style>
 </head>
 <body>
 
 <main class="wrap">
-  <h2>Контакты</h2>
+  <section class="row">
+    <img class="photo" src="portrait.jpg" alt="Портрет Анастасии">
+    <div class="right-col bodytext">
+      <h2>Обо мне</h2>
 
-  <div class="contacts">
-    <!-- Instagram @imnotdiller -->
-    <div class="contact-row">
-      <span class="icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
-          <rect x="3" y="3" width="18" height="18" rx="5" stroke="#e9eaec" stroke-width="1.5"/>
-          <circle cx="12" cy="12" r="4" stroke="#e9eaec" stroke-width="1.5"/>
-          <circle cx="17.5" cy="6.5" r="1" fill="#e9eaec"/>
-        </svg>
-      </span>
-      <span class="handle"><a href="https://www.instagram.com/imnotdiller" target="_blank" rel="noopener">@imnotdiller</a></span>
+      <p>Здравствуйте, я Анастасия, мне 26 лет. Имею высшее образование, Бакалавр на факультете Архитектуры и Дизайна. За спиной у меня объемный художественный бэкграунд и сейчас Я создаю визуальные истории с помощью ИИ и привычных графических инструментов, соединяя эстетику, технологии и атмосферу.</p>
+
+      <p>Мой путь начался с классического дизайна и digital-арта, благодаря NFT я нашла свой стиль, нашла и приняла себя, и этот мир ответил мне взаимностью. Не раз я выставлялась в разных странах и городах: в Москве, Дубае, Нью-Йорке, Японии, Испании, Индонезии.</p>
+
+      <p>Сегодня мой фокус - новые форматы в ИИ-креативе: fashion-визуалы, 3D-аватары, клипы и проекты с ярким сторителлингом для брендов.</p>
+
+      <p>Для меня важно, чтобы каждая работа была не просто картинкой или видео, а чем-то , что вызывает эмоции и запоминается. Я люблю эксперименты, ценю детали и верю, что технологии могут усиливать творчество, а не подменять его. Именно это я и делаю в своих проектах.</p>
+    </div>
+  </section>
+
+  <section class="row-bottom" style="margin-top:64px">
+    <div>
+      <div class="stack" id="stack">
+        <div class="card" data-idx="0"><img src="nft1.jpg" alt="Превью 1"></div>
+        <div class="card" data-idx="1"><img src="nft2.jpg" alt="Превью 2"></div>
+        <div class="card" data-idx="2"><img src="nft3.jpg" alt="Превью 3"></div>
+      </div>
+      <div class="stack-note">Наведи, чтобы открыть альбом (8 фото)</div>
     </div>
 
-    <!-- Instagram @nadobroart_neuro -->
-    <div class="contact-row">
-      <span class="icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
-          <rect x="3" y="3" width="18" height="18" rx="5" stroke="#e9eaec" stroke-width="1.5"/>
-          <circle cx="12" cy="12" r="4" stroke="#e9eaec" stroke-width="1.5"/>
-          <circle cx="17.5" cy="6.5" r="1" fill="#e9eaec"/>
-        </svg>
-      </span>
-      <span class="handle"><a href="https://www.instagram.com/nadobroart_neuro" target="_blank" rel="noopener">@nadobroart_neuro</a></span>
+    <div class="right-col bodytext">
+      <h2>Выставки и NFT</h2>
+      <ul>
+        <li><strong>2022–2023:</strong> первые AI-серии, NFT-релизы</li>
+        <li><strong>2023–2024:</strong> Москва, Дубай, Нью-Йорк, Япония, Испания, Индонезия</li>
+        <li><strong>2024–2025:</strong> fashion-визуалы, 3D-аватары, клипы</li>
+      </ul>
     </div>
-
-    <!-- Telegram group -->
-    <div class="contact-row">
-      <span class="icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
-          <path d="M21 5L3 12l6 2 8-8-6 10v3l3-2" stroke="#e9eaec" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </span>
-      <span class="handle"><a href="https://t.me/nadobroart_neuro" target="_blank" rel="noopener">@nadobroart_neuro</a></span>
-    </div>
-
-    <!-- Email -->
-    <div class="contact-row">
-      <span class="icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4 6h16v12H4z" stroke="#e9eaec" stroke-width="1.5"/>
-          <path d="M4 7l8 6 8-6" stroke="#e9eaec" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-      </span>
-      <span class="handle"><a href="mailto:nadobroart@gmail.com">nadobroart@gmail.com</a></span>
-    </div>
-  </div>
-
-  <div class="slogan-box">
-    <p class="contact-slogan">свяжитесь со мной, создадим историю вашего бренда вместе</p>
-  </div>
+  </section>
 </main>
 
-<!-- Мини-меню -->
 <nav class="minimenu" aria-label="Мини-меню">
   <a href="about.html">обо мне</a>
   <a href="contact.html">контакты</a>
   <a href="index.html">главная</a>
 </nav>
-
-<!-- Переключатель языка -->
 <div class="langswitch" aria-label="Выбор языка">
-  <a href="contact.html" class="active">RU</a>/<a href="en/contact.html">ENG</a>
+  <a href="about.html" class="active">RU</a>/<a href="en/about.html">ENG</a>
+</div>
+
+<!-- Лайтбокс -->
+<div class="lightbox" id="lightbox">
+  <div class="lb-inner">
+    <button class="lb-close" id="lbClose" aria-label="Закрыть">×</button>
+    <button class="lb-prev" id="lbPrev" aria-label="Назад">‹</button>
+    <img class="lb-img" id="lbImg" src="" alt="">
+    <button class="lb-next" id="lbNext" aria-label="Вперёд">›</button>
+
+    <div class="lb-title" id="lbTitle"></div>
+    <div class="lb-meta" id="lbMeta"></div>
+    <div class="lb-desc bodytext" id="lbDesc"></div>
+
+    <div class="lb-hint">Клик по изображению — описание · Esc / клик по фону — закрыть</div>
+  </div>
 </div>
 
 <footer class="foot">
@@ -156,6 +133,68 @@
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* ===== Альбом: моментально при наведении, закрытие по крестику/фону/Esc ===== */
+  const gallery = [
+    {src:'nft1.jpg', title:'Серия «Хром»,', city:'Дубай', year:'2023', desc:'Исследование отражающих поверхностей и неонового света в контексте урбан-мифологии.'},
+    {src:'nft2.jpg', title:'«Ветер внутри»,', city:'Токио', year:'2024', desc:'Гибридные портреты: смешение AI-рендеров и ручной пост-обработки.'},
+    {src:'nft3.jpg', title:'«Сон на плёнке»,', city:'Нью-Йорк', year:'2024', desc:'Имитация плёночных артефактов через генеративные шумы и зерно.'},
+    {src:'nft4.jpg', title:'«Эхо»,', city:'Лиссабон', year:'2024', desc:'Монохромная пластика. Звуковая волна как форма композиции.'},
+    {src:'nft5.jpg', title:'«Грань мира»,', city:'Бали', year:'2023', desc:'Тропический сюр и жидкий металл в одном кадре.'},
+    {src:'nft6.jpg', title:'«Ligature»,', city:'Тбилиси', year:'2025', desc:'Связки шейпов и типографики в телесных текстурах.'},
+    {src:'nft7.jpg', title:'«Afterlight»,', city:'Париж', year:'2025', desc:'Переосмысление контражура и бликов как нарратива.'},
+    {src:'nft8.jpg', title:'«Zero Hour»,', city:'Берлин', year:'2025', desc:'Отчуждённые пространства на стыке сна и архитектуры.'}
+  ];
+
+  const stack = document.getElementById('stack');
+  const lb = document.getElementById('lightbox');
+  const lbInner = lb.querySelector('.lb-inner');
+  const lbImg = document.getElementById('lbImg');
+  const lbTitle = document.getElementById('lbTitle');
+  const lbDesc = document.getElementById('lbDesc');
+  const lbPrev = document.getElementById('lbPrev');
+  const lbNext = document.getElementById('lbNext');
+  const lbClose = document.getElementById('lbClose');
+  let gi = 0;
+
+  function renderLB(){
+    const g = gallery[gi];
+    lbImg.src = g.src;
+    lbTitle.textContent = `${g.title} ${g.city} — ${g.year}`;
+    lbDesc.textContent = g.desc || '';
+    lbDesc.classList.remove('show');
+  }
+  function openLB(i=0){ gi=i; renderLB(); lb.classList.add('open'); }
+  function closeLB(){ lb.classList.remove('open'); }
+  function prevLB(e){ gi=(gi-1+gallery.length)%gallery.length; renderLB(); if(e) e.stopPropagation(); }
+  function nextLB(e){ gi=(gi+1)%gallery.length; renderLB(); if(e) e.stopPropagation(); }
+
+  // Открытие СРАЗУ при наведении (desktop)
+  const prefersHover = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+  if (prefersHover) {
+    stack.addEventListener('mousemove', (e)=>{
+      const card = e.target.closest('.card'); if(!card) return;
+      const idx  = Number(card.dataset.idx||0);
+      if (!lb.classList.contains('open') || gi!==idx){ openLB(idx); }
+    }, true);
+  } else {
+    // На телефоне — по клику
+    stack.addEventListener('click', (e)=>{
+      const card = e.target.closest('.card'); if(!card) return;
+      openLB(Number(card.dataset.idx||0));
+    });
+  }
+
+  // Показ описания
+  lbImg.addEventListener('click', ()=> lbDesc.classList.toggle('show'));
+
+  // Управление/закрытие
+  lbPrev.addEventListener('click', prevLB);
+  lbNext.addEventListener('click', nextLB);
+  lbClose.addEventListener('click', (e)=>{ e.stopPropagation(); closeLB(); });
+  lb.addEventListener('click', (e)=>{ if(e.target === lb) closeLB(); });
+  document.addEventListener('keydown', (e)=>{ if(lb.classList.contains('open') && e.key==='Escape') closeLB(); });
+  lbInner.addEventListener('click', (e)=> e.stopPropagation());
 </script>
 </body>
 </html>
