@@ -4,93 +4,266 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Anastasia — Inter-designer / AI</title>
-<meta name="description" content="Inter-designer, AI content creator, prompt-engineer. Video background, staged frames.">
+<meta name="description" content="AI content creator, prompt-engineer, inter-designer. Fullscreen video background with vertical pan on scroll.">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{ --bg:#000; --text:#e9eaec; --muted:#9da0a6; --edge:#171717; --max:1300px; --radius:16px; --fade:600ms; }
-  *{box-sizing:border-box} html{scroll-behavior:smooth}
-  body{margin:0; background:var(--bg); color:var(--text); font-family:Inter, system-ui, -apple-system, Arial, sans-serif}
+  :root{
+    --text:#e9eaec; --muted:#9da0a6; --edge:rgba(255,255,255,.08);
+    --max:1300px; --radius:16px; --fade:600ms;
+  }
+  *{ box-sizing:border-box }
+  html{ scroll-behavior:smooth }
+  body{
+    margin:0; color:var(--text);
+    font-family: Inter, system-ui, -apple-system, Arial, sans-serif;
+    background:#000;
+  }
 
-  .minimenu{ position:fixed; left:14px; bottom:14px; z-index:30; display:flex; flex-direction:column; gap:6px; font-size:12px; letter-spacing:.08em; background:rgba(0,0,0,.5); backdrop-filter:blur(6px); padding:8px 10px; border-radius:10px; border:1px solid #111; }
+  /* ===== FULLSCREEN VIDEO (pans vertically on scroll) ===== */
+  #bgVideo{
+    position:fixed; inset:0; width:100%; height:100%;
+    object-fit:cover;
+    object-position: 50% 50%; /* updated in JS */
+    z-index:-2;
+    will-change: object-position, transform;
+  }
+  .bg-dim{
+    position:fixed; inset:0; z-index:-1;
+    background:linear-gradient(180deg, rgba(0,0,0,.40) 0%, rgba(0,0,0,.55) 40%, rgba(0,0,0,.68) 100%);
+    pointer-events:none;
+  }
+
+  /* ===== Content over video ===== */
+  .overlay{ position:relative; z-index:1 }
+
+  /* mini menu (left bottom) */
+  .minimenu{
+    position:fixed; left:14px; bottom:14px; z-index:30;
+    display:flex; flex-direction:column; gap:6px;
+    font-size:12px; letter-spacing:.08em;
+    background:rgba(0,0,0,.5); backdrop-filter:blur(6px);
+    padding:8px 10px; border-radius:10px; border:1px solid #111;
+  }
   .minimenu a{ color:#cfcfd4; text-decoration:none }
 
-  .langswitch{ position:fixed; right:14px; bottom:14px; z-index:30; display:flex; gap:10px; font-size:12px; letter-spacing:.08em; background:rgba(0,0,0,.5); backdrop-filter:blur(6px); padding:8px 10px; border-radius:10px; border:1px solid #111; }
+  /* RU/ENG (right bottom) — links only */
+  .langswitch{
+    position:fixed; right:14px; bottom:14px; z-index:30;
+    display:flex; gap:10px;
+    font-size:12px; letter-spacing:.08em;
+    background:rgba(0,0,0,.5); backdrop-filter:blur(6px);
+    padding:8px 10px; border-radius:10px; border:1px solid #111;
+  }
   .langswitch a{ color:#cfcfd4; text-decoration:none; text-transform:uppercase }
   .langswitch a.active{ color:#fff; text-decoration:underline; text-underline-offset:3px }
 
-  .hero{position:relative; height:100vh; overflow:hidden}
-  .hero video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:brightness(.5) contrast(1.05); transition:transform .9s ease, opacity .9s ease; }
-  .hero.wipe video{ transform:translateY(-40%); opacity:0; pointer-events:none; }
-  .hero__overlay{position:absolute; inset:0; background:rgba(0,0,0,.35)}
-  .hero__inner{position:relative; z-index:2; height:100%; display:grid; place-items:center; text-align:center; padding:0 24px}
-  .hero__title{ font-weight:900; letter-spacing:-.01em; line-height:.95; color:#fff; font-size:clamp(34px,8vw,112px); opacity:0; transform:translateY(20px); transition:opacity var(--fade) ease, transform var(--fade) ease; }
-  .hero.loaded .hero__title{opacity:1; transform:none}
-  .scroll-indicator{position:absolute; left:50%; bottom:24px; transform:translateX(-50%); color:var(--muted); font-size:12px; letter-spacing:.12em; opacity:.8}
+  /* ===== HERO ===== */
+  .hero{
+    min-height:100vh; display:grid; place-items:center;
+    padding:0 24px; text-align:center;
+  }
+  .main-title{
+    margin:0; color:#fff; letter-spacing:-.01em; line-height:.95;
+    font-weight:900; font-size:clamp(34px,8vw,112px);
+    opacity:0; transform:translateY(20px);
+    transition:opacity var(--fade) ease, transform var(--fade) ease;
+  }
+  .loaded .main-title{ opacity:1; transform:none }
 
-  .intro{min-height:60vh; display:grid; place-items:center; padding:12vh 24px 16vh}
-  .intro__text{ text-align:center; max-width:1100px; line-height:1.2; font-weight:800; font-size:clamp(18px,3.2vw,40px);
-    opacity:0; transform:translateY(40px); transition:opacity var(--fade) cubic-bezier(.2,.7,.2,1), transform var(--fade) cubic-bezier(.2,.7,.2,1);
-    font-family: Raleway, Inter, system-ui, -apple-system, Arial, sans-serif; }
-  .intro.show .intro__text{opacity:1; transform:none}
+  /* ===== Second line ===== */
+  .sub{
+    min-height:60vh; display:grid; place-items:center;
+    padding:12vh 24px 10vh;
+  }
+  .subtitle{
+    margin:0; text-align:center; max-width:1100px;
+    line-height:1.2; font-weight:800;
+    font-size:clamp(18px,3.2vw,40px);
+    opacity:0; transform:translateY(40px);
+    transition:opacity var(--fade) cubic-bezier(.2,.7,.2,1), transform var(--fade) cubic-bezier(.2,.7,.2,1);
+    font-family: Raleway, Inter, system-ui, -apple-system, Arial, sans-serif;
+  }
+  .subtitle.show{ opacity:1; transform:none }
 
-  .album{border-top:1px solid var(--edge); padding:20px 0 80px; position:relative; z-index:2}
-  .album__head{display:flex; justify-content:space-between; align-items:center; padding:0 24px; max-width:var(--max); margin:0 auto 10px; color:var(--muted); font-size:12px; letter-spacing:.1em}
-  .frames{position:relative; max-width:var(--max); margin:0 auto; padding:0 24px; display:grid; gap:28px}
-  .frame{ position:relative; border:1px solid var(--edge); border-radius:var(--radius); overflow:hidden; background:#0b0b0b; transform: translateY(60px); opacity:0; transition: transform .7s cubic-bezier(.2,.7,.2,1), opacity .7s ease, box-shadow .5s ease; }
+  /* ===== Frames ===== */
+  .album{ padding:20px 0 100px; position:relative; }
+  .album__head{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:0 24px; max-width:var(--max); margin:0 auto 10px;
+    color:#cfd1d6; font-size:12px; letter-spacing:.1em; text-transform:uppercase;
+  }
+  .frames{
+    position:relative; max-width:var(--max); margin:0 auto; padding:0 24px;
+    display:grid; gap:28px;
+  }
+  .frame{
+    position:relative; border:1px solid var(--edge);
+    border-radius:var(--radius); overflow:hidden; background:rgba(0,0,0,.25);
+    transform: translateY(60px); opacity:0;
+    transition: transform .7s cubic-bezier(.2,.7,.2,1), opacity .7s ease, box-shadow .5s ease, background .3s ease;
+    backdrop-filter: blur(2px);
+  }
   .frame.appear{ transform:translateY(0); opacity:1 }
-  .frame img{display:block; width:100%; height:auto; object-fit:contain; background:#000; cursor:pointer}
-  .frame .cap{position:absolute; left:14px; bottom:12px; padding:6px 10px; font-size:12px; color:#d7d9dd; background:rgba(0,0,0,.35); border-radius:8px; backdrop-filter: blur(3px)}
-  .frame:hover{ box-shadow:0 30px 80px rgba(0,0,0,.35) }
-  .frame__desc{ display:none; padding:12px 14px; border-top:1px solid #121212; background:#0b0b0b; font-family: Raleway, Inter, system-ui, -apple-system, Arial, sans-serif; color:#cfd1d6; font-size:14px; line-height:1.5; }
+  .frame:hover{ box-shadow:0 30px 80px rgba(0,0,0,.45); background:rgba(0,0,0,.35) }
+  .frame img{ display:block; width:100%; height:auto; object-fit:contain; background:#000; cursor:pointer }
+  .cap{
+    position:absolute; left:14px; bottom:12px; padding:6px 10px;
+    font-size:12px; color:#e6e8ec; background:rgba(0,0,0,.35);
+    border-radius:8px; backdrop-filter: blur(3px)
+  }
+  .frame__desc{
+    display:none; padding:12px 14px; border-top:1px solid var(--edge);
+    background:rgba(0,0,0,.35);
+    font-family: Raleway, Inter, system-ui, -apple-system, Arial, sans-serif;
+    color:#dfe2e8; font-size:14px; line-height:1.5;
+  }
   .frame.open .frame__desc{ display:block }
 
-  .foot{padding:30px 24px; border-top:1px solid var(--edge); color:#8c8d91; text-align:center; font-size:12px}
+  .foot{ padding:30px 24px; color:#c5c7cc; text-align:center; font-size:12px; }
+
+  .scroll-indicator{
+    position:absolute; left:50%; bottom:24px; transform:translateX(-50%);
+    color:var(--muted); font-size:12px; letter-spacing:.12em; opacity:.85
+  }
 </style>
 </head>
 <body>
 
-<section class="hero" id="hero">
-  <video id="bg" autoplay muted loop playsinline><source src="../bg.mp4" type="video/mp4"></video>
-  <div class="hero__overlay" aria-hidden="true"></div>
-  <div class="hero__inner"><h1 class="hero__title">Diller of cinematic vibe</h1></div>
-  <div class="scroll-indicator">SCROLL</div>
-</section>
+<!-- FULLSCREEN VIDEO (pans via object-position on scroll) -->
+<video id="bgVideo" autoplay muted loop playsinline>
+  <source src="../bg.mp4" type="video/mp4">
+</video>
+<div class="bg-dim" aria-hidden="true"></div>
 
-<section class="intro" id="intro">
-  <div class="intro__text">
-    Anastasia — AI content creator, prompt-engineer<br />and multidisciplinary designer
-  </div>
-</section>
+<!-- Content over video -->
+<div class="overlay" id="overlay">
 
-<section class="album" id="album">
-  <div class="album__head"><span>FRAMES</span><span>scroll down</span></div>
-  <div class="frames" id="frames">
-    <figure class="frame"><img src="../frame1.jpg" alt="Frame 1"><figcaption class="cap">Scene 1</figcaption><div class="frame__desc">Frame 1 description.</div></figure>
-    <figure class="frame"><img src="../frame2.jpg" alt="Frame 2"><figcaption class="cap">Scene 2</figcaption><div class="frame__desc">Frame 2 description.</div></figure>
-    <figure class="frame"><img src="../frame3.jpg" alt="Frame 3"><figcaption class="cap">Scene 3</figcaption><div class="frame__desc">Frame 3 description.</div></figure>
-    <figure class="frame"><img src="../frame4.jpg" alt="Frame 4"><figcaption class="cap">Scene 4</figcaption><div class="frame__desc">Frame 4 description.</div></figure>
-    <figure class="frame"><img src="../frame5.jpg" alt="Frame 5"><figcaption class="cap">Scene 5</figcaption><div class="frame__desc">Frame 5 description.</div></figure>
-  </div>
-</section>
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <h1 class="main-title">Diller of cinematic vibe</h1>
+    <div class="scroll-indicator">SCROLL</div>
+  </section>
 
+  <!-- Second line -->
+  <section class="sub" id="sub">
+    <h2 class="subtitle" id="subtitle">
+      Anastasia — AI content creator, prompt-engineer<br />
+      and multidisciplinary designer
+    </h2>
+  </section>
+
+  <!-- Frames -->
+  <section class="album" id="album">
+    <div class="album__head"><span>FRAMES</span><span>scroll down</span></div>
+
+    <div class="frames" id="frames">
+      <figure class="frame">
+        <img src="../frame1.jpg" alt="Frame 1">
+        <figcaption class="cap">Scene 1</figcaption>
+        <div class="frame__desc">Brief caption for frame 1 — idea, technique, context.</div>
+      </figure>
+
+      <figure class="frame">
+        <img src="../frame2.jpg" alt="Frame 2">
+        <figcaption class="cap">Scene 2</figcaption>
+        <div class="frame__desc">Brief caption for frame 2.</div>
+      </figure>
+
+      <figure class="frame">
+        <img src="../frame3.jpg" alt="Frame 3">
+        <figcaption class="cap">Scene 3</figcaption>
+        <div class="frame__desc">Brief caption for frame 3.</div>
+      </figure>
+
+      <figure class="frame">
+        <img src="../frame4.jpg" alt="Frame 4">
+        <figcaption class="cap">Scene 4</figcaption>
+        <div class="frame__desc">Brief caption for frame 4.</div>
+      </figure>
+
+      <figure class="frame">
+        <img src="../frame5.jpg" alt="Frame 5">
+        <figcaption class="cap">Scene 5</figcaption>
+        <div class="frame__desc">Brief caption for frame 5.</div>
+      </figure>
+    </div>
+  </section>
+
+</div>
+
+<!-- Mini menu -->
 <nav class="minimenu" aria-label="Mini menu">
   <a href="about.html">about</a>
   <a href="contact.html">contacts</a>
   <a href="index.html">home</a>
 </nav>
+
+<!-- Language -->
 <div class="langswitch" aria-label="Language">
   <a href="../index.html">RU</a>/<a href="index.html" class="active">ENG</a>
 </div>
 
-<footer class="foot"><small>© <span id="year"></span> Anastasia</small></footer>
+<footer class="foot">
+  <small>© <span id="year"></span> Anastasia</small>
+</footer>
 
 <script>
-  const hero=document.getElementById('hero'), bg=document.getElementById('bg');
-  function show(){ hero.classList.add('loaded'); } if(bg){ bg.oncanplay=show; setTimeout(show,800);}
-  const intro=document.getElementById('intro'); new IntersectionObserver(es=>es.forEach(e=>intro.classList.toggle('show',e.isIntersecting)),{threshold:.35}).observe(intro);
-  const album=document.getElementById('album'); new IntersectionObserver(es=>es.forEach(e=>hero.classList.toggle('wipe',e.isIntersecting)),{threshold:.15}).observe(album);
-  const frames=[...document.querySelectorAll('.frame')]; const io3=new IntersectionObserver(es=>{es.forEach(e=>e.target.classList.toggle('appear',e.isIntersecting));},{threshold:.25}); frames.forEach(f=>{io3.observe(f); f.querySelector('img')?.addEventListener('click',()=>f.classList.toggle('open'));});
-  document.getElementById('year').textContent=new Date().getFullYear();
+  // Smooth reveal of the main title
+  document.body.classList.add('loaded');
+
+  // Reveal second line when it enters viewport
+  const subtitle = document.getElementById('subtitle');
+  new IntersectionObserver((es)=>es.forEach(e=>{ if(e.isIntersecting) subtitle.classList.add('show'); }),{threshold:.35})
+    .observe(document.getElementById('sub'));
+
+  // Frames appear on scroll
+  const frames = [...document.querySelectorAll('.frame')];
+  const io2 = new IntersectionObserver((entries)=>{
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('appear'); });
+  }, {threshold:.25});
+  frames.forEach(f => io2.observe(f));
+
+  // Toggle frame description on click
+  frames.forEach(f=>{
+    f.querySelector('img')?.addEventListener('click', ()=> f.classList.toggle('open'));
+  });
+
+  // Year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* ===== VERTICAL VIDEO PAN ON SCROLL =====
+     Start slightly ABOVE center (35%), end near bottom (85%).
+     Progress is mapped to total page scroll (0..1).
+  */
+  const video = document.getElementById('bgVideo');
+  let ticking = false;
+
+  function setVideoPos(){
+    const doc = document.documentElement;
+    const max = (doc.scrollHeight - doc.clientHeight);
+    const sc  = Math.max(0, Math.min(max, window.scrollY || window.pageYOffset || 0));
+    const t   = max > 0 ? (sc / max) : 0;
+
+    const start = 35; // %
+    const end   = 85; // %
+    const posY  = start + (end - start) * t;
+    const y     = Math.max(0, Math.min(100, posY));
+    video.style.objectPosition = `50% ${y}%`;
+    ticking = false;
+  }
+  window.addEventListener('scroll', ()=>{
+    if (!ticking) {
+      window.requestAnimationFrame(setVideoPos);
+      ticking = true;
+    }
+  }, {passive:true});
+  setVideoPos();
+  window.addEventListener('resize', setVideoPos, {passive:true});
+
+  // Fallback: ensure video has a source even if <source> not picked up
+  (function ensureVideo(){
+    if (!video.currentSrc) video.src = '../bg.mp4';
+  })();
 </script>
 </body>
 </html>
